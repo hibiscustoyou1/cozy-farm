@@ -1,0 +1,16 @@
+{
+  "name": "@cozy-farm/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "系统层：GameState、时间系统、生长/经济/订单等纯 TS 逻辑，零框架依赖",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}

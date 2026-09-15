@@ -1,0 +1,20 @@
+{
+  "name": "@cozy-farm/game",
+  "version": "0.1.0",
+  "private": true,
+  "description": "表现层：Phaser 场景与 Canvas 渲染，只读 GameState，不写业务逻辑",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cozy-farm/core": "workspace:*",
+    "phaser": "^3.87.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}

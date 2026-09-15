@@ -1,0 +1,16 @@
+{
+  "name": "cozy-farm",
+  "private": true,
+  "version": "0.1.0",
+  "description": "四季田园 —— 治愈系田园经营 H5 小游戏（个人项目，不商业变现）",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @cozy-farm/app dev",
+    "build": "pnpm --filter @cozy-farm/app build",
+    "preview": "pnpm --filter @cozy-farm/app preview",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
