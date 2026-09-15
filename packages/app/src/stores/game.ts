@@ -22,15 +22,20 @@ import { ref, shallowRef } from 'vue';
 import {
   advanceGrowth,
   buySeed as coreBuySeed,
+  canExpandTile,
   createInitialState,
   currentClockHours,
   currentSeason,
   currentSeasonDay,
   CROPS,
   cropKey,
+  expandTile as coreExpandTile,
   harvestTile,
+  isAdjacentToUnlocked,
   plantSeed,
   seedKey,
+  sellAll as coreSellAll,
+  sellCrop as coreSellCrop,
   settleOffline,
   tick,
   tillTile,
@@ -50,6 +55,9 @@ const SEASON_LABELS = { spring: '春', summer: '夏', autumn: '秋', winter: '�
 
 /** 农具（种子是"工具 + 品种"两级选择） */
 export type ToolId = 'hoe' | 'seed' | 'water' | 'basket';
+
+/** 面板标签（M2：商店 / 背包 / 图鉴） */
+export type PanelTab = 'shop' | 'bag' | 'codex';
 
 export interface ToastMsg {
   id: number;
@@ -95,6 +103,8 @@ export const useGameStore = defineStore('game', () => {
   const seedCounts = ref<Record<string, number>>({});
   /** toast 队列（收获/成熟/错误提示） */
   const toasts = ref<ToastMsg[]>([]);
+  /** 当前打开的面板（桌面右栏 tabs / 移动端 bottom sheet 共用） */
+  const activeTab = ref<PanelTab | null>(null);
 
   function pushToast(text: string, tone: ToastMsg['tone'] = 'info'): void {
     const msg: ToastMsg = { id: ++toastSeq, text, tone };
@@ -109,6 +119,8 @@ export const useGameStore = defineStore('game', () => {
   /** FarmResult 失败原因 → 玩家可读文案 */
   function failText(reason: NonNullable<FarmResult['reason']>): string {
     switch (reason) {
+      case 'tile-locked':
+        return '这块地还没开垦，先扩地吧';
       case 'wrong-state':
         return '这块地现在做不了这个';
       case 'no-seed':
@@ -146,11 +158,32 @@ export const useGameStore = defineStore('game', () => {
   // ---------- M1：种植操作（game 层 onTileActivate 的语义解释层） ----------
 
   /**
-   * 玩家激活某格：按当前工具执行对应 core 系统函数。
+   * 玩家激活某格：锁定块 → 扩地流程（确认后购买）；
+   * 解锁块 → 按当前工具执行对应 core 系统函数。
    * 成功 → 刷镜像 + 防抖存档；失败 → toast 说明原因（无失败原则：不惩罚）。
    */
   function applyTool(tileId: number): void {
     const s = gameData.value;
+
+    // 锁定块：扩地入口（点击 = 询问购买）
+    if (!s.unlockedTileIds.includes(tileId)) {
+      const check = canExpandTile(s, tileId);
+      if (check.ok) {
+        if (window.confirm(`花 ${check.price} 金币开垦这块地吗？`)) {
+          const r = coreExpandTile(s, tileId);
+          if (r.ok) {
+            pushToast(`开垦新地块！-${r.price} 金币`, 'good');
+            syncFromGame();
+            notifyGameAction();
+          }
+        }
+      } else if (check.reason === 'not-enough-gold') {
+        pushToast(`开垦要 ${check.price} 金币，还差一些`, 'bad');
+      }
+      // not-adjacent / already-unlocked 静默（点了远端锁定块不打扰）
+      return;
+    }
+
     let result: FarmResult;
     switch (selectedTool.value) {
       case 'hoe':
@@ -182,13 +215,18 @@ export const useGameStore = defineStore('game', () => {
 
   /** 当前工具对该格是否可用（game 层 hover 高亮的红/绿判定，纯读） */
   function canApplyTool(tileId: number): boolean {
-    const tile = findTile(gameData.value, tileId);
+    const s = gameData.value;
+    // 锁定块：相邻可购 → 绿（买地）；远端 → 红
+    if (!s.unlockedTileIds.includes(tileId)) {
+      return canExpandTile(s, tileId).ok;
+    }
+    const tile = findTile(s, tileId);
     if (!tile) return false;
     switch (selectedTool.value) {
       case 'hoe':
         return tile.state === 'wild';
       case 'seed':
-        return tile.state === 'tilled' && (gameData.value.inventory[seedKey(selectedSeed.value)] ?? 0) > 0;
+        return tile.state === 'tilled' && (s.inventory[seedKey(selectedSeed.value)] ?? 0) > 0;
       case 'water':
         return tile.state === 'growing';
       case 'basket':
@@ -196,7 +234,15 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  /** 快速补一粒种子（M2 正式商店接管前的极简通道） */
+  /** game 层锁定块标签：相邻可购返回价格，远端返回 undefined（显示 🔒） */
+  function lockedTilePrice(tileId: number): number | undefined {
+    const s = gameData.value;
+    if (s.unlockedTileIds.includes(tileId)) return undefined;
+    if (!isAdjacentToUnlocked(s, tileId)) return undefined;
+    return canExpandTile(s, tileId).price;
+  }
+
+  /** 快速补一粒种子（工具栏内嵌的极简通道） */
   function quickBuySeed(crop: CropId): void {
     const result = coreBuySeed(gameData.value, crop, 1);
     if (result.ok) {
@@ -208,7 +254,46 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  /** 背包里某作物的数量（收获物，M2 出售） */
+  // ---------- M2：商店 / 背包 / 图鉴 ----------
+
+  /** 商店购买种子（支持数量） */
+  function shopBuySeed(crop: CropId, count: number): void {
+    const result = coreBuySeed(gameData.value, crop, count);
+    if (result.ok) {
+      pushToast(`买了 ${count} 粒${CROPS[crop].name}种子`, 'good');
+      syncFromGame();
+      notifyGameAction();
+    } else if (result.reason) {
+      pushToast(failText(result.reason), 'bad');
+    }
+  }
+
+  /** 出售背包作物（单件/多件） */
+  function sellCropAction(crop: CropId, count: number): void {
+    const r = coreSellCrop(gameData.value, crop, count);
+    if (r.ok) {
+      pushToast(`卖出 ${CROPS[crop].name}×${count} +${r.goldGained} 金币`, 'good');
+      syncFromGame();
+      notifyGameAction();
+    } else {
+      pushToast('库存不足', 'bad');
+    }
+  }
+
+  /** 一键卖出全部作物 */
+  function sellAllAction(): void {
+    const r = coreSellAll(gameData.value);
+    if (r.ok) {
+      const kinds = Object.keys(r.soldItems).length;
+      pushToast(`一键卖出 ${kinds} 种作物 +${r.goldGained} 金币`, 'good');
+      syncFromGame();
+      notifyGameAction();
+    } else {
+      pushToast('背包里还没有收成', 'bad');
+    }
+  }
+
+  /** 背包里某作物的数量（收获物） */
   function cropCount(crop: CropId): number {
     return gameData.value.inventory[cropKey(crop)] ?? 0;
   }
@@ -331,7 +416,13 @@ export const useGameStore = defineStore('game', () => {
     toasts,
     applyTool,
     canApplyTool,
+    lockedTilePrice,
     quickBuySeed,
+    // M2 经济
+    activeTab,
+    shopBuySeed,
+    sellCropAction,
+    sellAllAction,
     cropCount,
     pushToast,
     setSpeed,

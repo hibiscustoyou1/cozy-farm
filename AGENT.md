@@ -17,8 +17,9 @@
 - ✅ Monorepo 骨架落地并首次提交（main `5abe16a`）：三包架构 + 时间系统（gameTime/调速/离线结算）+ 双端布局骨架，install / typecheck / dev / build 全绿
 - ✅ M0 收尾：存档框架（`f18bb98` 之后）：core 存档系统（信封/校验/迁移链）+ localStorage 双写轮换（损坏自愈/内存降级）+ 自动存档（30s 定时/关键操作 3s 防抖/页面隐藏与关闭前）+ JSON 导入导出 + 存档菜单（手动保存/重置）；vitest 全绿
 - ✅ M1 前置：静态资源基础已入库：Ellen0ra 16×16 环境图块为主视觉，Mossbell / LPC / OpenGameArt / Tiny Farm 作补充候选，临时 BGM 与原创像素图标已就绪；见 `docs/资源来源与授权.md`
-- ✅ M1：种植循环：core `systems/farming.ts`（锄/种/浇/收 + 快速买种 + 经验升级）+ 生长累计模型（断水暂停、补浇续长；存档升 v3：tile 增 `grownMs`/`lastGrowthAt`）+ Phaser 农场网格（5×4、拖动批量、hover 红绿高亮、成熟弹跳、收获粒子）+ 工具栏（桌面左栏/移动底栏）+ 种子面板（当季可购、反季可种）+ toast 反馈
-- ⬜ M2 经济：正式商店 + 背包出售 + 扩地（200/500/1200/3000…上限 10×8=80 格）+ 经验曲线平衡 + 图鉴雏形
+- ✅ M1：种植循环：core `systems/farming.ts`（锄/种/浇/收 + 快速买种 + 经验升级）+ 生长累计模型（断水暂停、补浇续长）+ Phaser 农场网格（拖动批量、hover 红绿高亮、成熟弹跳、收获粒子）+ 工具栏 + 种子面板 + toast 反馈
+- ✅ M2：经济闭环：core `systems/economy.ts`（单件/一键出售、扩地：相邻约束 + 价格递增 200/500/1200/3000→×1.5）+ 存档 v4（网格扩为 10×8 全量 80 块，旧 20 块居中重排，id=row×10+col）+ 经验曲线（80×level^1.35）+ 锁定块渲染（💰价格/🔒）点击买地 + InfoPanel（商店/背包/图鉴，桌面右栏 tabs / 移动 bottom sheet）——"种→收→卖→买"闭环达成
+- ⬜ M3 牧场：鸡/牛 + 饲料 + 产出 + 加工建筑（厨房/作坊/果酱台）
 
 里程碑路线图见方案文档 §六。
 
@@ -66,11 +67,13 @@ packages/
 - localStorage 两槽 `cozy-farm:save:a|b` 交替写，信封 `seq` 比新旧；一槽损坏自动回退另一槽
 - localStorage 不可用（隐私模式等）→ 内存降级，UI 顶栏 💾 变红提示
 - 自动存档三时机：30s 定时 + 关键操作 3s 防抖（`store.notifyGameAction()`）+ 页面隐藏/关闭前
-- 当前 `SAVE_VERSION=3`（v3：tile 增 `grownMs`/`lastGrowthAt` 支持断水续长）；结构变更：递增 `SAVE_VERSION` + 在 `MIGRATIONS` 链补函数 + 补单测
+- 当前 `SAVE_VERSION=4`（v4：10×8 全量网格 + id 重排）；结构变更：递增 `SAVE_VERSION` + 在 `MIGRATIONS` 链补函数 + 补单测
+- 迁移铁律：各版本迁移函数必须"定格在当时的语义"，禁止用 `createInitialState()` 当模板（模板会随后续版本演进，把新结构混进旧档）
 
-## 种植循环速查（M1）
+## 种植循环速查（M1/M2）
 
 - 状态机：`wild →(锄)→ tilled →(种)→ growing →(浇水保湿 1 游戏日)→ mature →(收)→ tilled`
+- 网格：最大 10×8=80 块全量生成（id=row×10+col），初始解锁中心 5×4（col 2~6/row 2~5）；锁定块点击买地（相邻约束 + 价格递增）
 - 生长模型：湿润窗口 `[plantedAt, wateredUntil)` 内的 gameTime 才计入 `grownMs`；断水只暂停不倒退，补浇从断点续长（`advanceGrowth` 每帧结算）
 - 种植不限季（种子是玩家财产）；季节只过滤商店货架；等级解锁作物
 - 交互：game 层 `FarmHooks`（getState 只读 + onTileActivate 上报 + canActivate 高亮判定），工具语义由 app store `applyTool` 解释

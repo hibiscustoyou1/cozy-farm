@@ -27,7 +27,8 @@ export const cropKey = (crop: CropId): string => `crop:${crop}`;
 // ---------- 结果类型 ----------
 
 export type FarmFailReason =
-  | 'tile-not-found'    // 地块不存在（越界/未解锁）
+  | 'tile-not-found'    // 地块不存在（越界）
+  | 'tile-locked'       // 地块未解锁（需扩地）
   | 'wrong-state'       // 当前工具对该地块状态不可用
   | 'no-seed'           // 种子库存不足
   | 'season-mismatch'   // 商店货架季节不符
@@ -49,16 +50,32 @@ function fail(reason: FarmFailReason): FarmResult {
   return { ok: false, reason };
 }
 
-function findTile(state: GameState, tileId: number): Tile | null {
-  return state.tiles.find((t) => t.id === tileId) ?? null;
+/**
+ * 查找地块并校验已解锁。返回 null 表示 tile-not-found；
+ * 返回 'locked' 表示地块存在但未解锁（M2 网格含全部 80 块）。
+ */
+function findTile(state: GameState, tileId: number): Tile | 'locked' | null {
+  const tile = state.tiles.find((t) => t.id === tileId);
+  if (!tile) return null;
+  if (!state.unlockedTileIds.includes(tileId)) return 'locked';
+  return tile;
+}
+
+/** 统一把 findTile 的三态转成 FarmResult（各操作共用） */
+function requireTile(state: GameState, tileId: number): { tile: Tile } | { fail: FarmResult } {
+  const tile = findTile(state, tileId);
+  if (tile === null) return { fail: { ok: false, reason: 'tile-not-found' } };
+  if (tile === 'locked') return { fail: { ok: false, reason: 'tile-locked' } };
+  return { tile };
 }
 
 // ---------- 锄地 ----------
 
 /** 荒地 → 耕地 */
 export function tillTile(state: GameState, tileId: number): FarmResult {
-  const tile = findTile(state, tileId);
-  if (!tile) return fail('tile-not-found');
+  const r = requireTile(state, tileId);
+  if ('fail' in r) return r.fail;
+  const { tile } = r;
   if (tile.state !== 'wild') return fail('wrong-state');
   tile.state = 'tilled';
   return { ok: true };
@@ -68,8 +85,9 @@ export function tillTile(state: GameState, tileId: number): FarmResult {
 
 /** 耕地 → 生长中（种下需浇水启动，见 waterTile） */
 export function plantSeed(state: GameState, tileId: number, crop: CropId): FarmResult {
-  const tile = findTile(state, tileId);
-  if (!tile) return fail('tile-not-found');
+  const r = requireTile(state, tileId);
+  if ('fail' in r) return r.fail;
+  const { tile } = r;
   if (tile.state !== 'tilled') return fail('wrong-state');
 
   const key = seedKey(crop);
@@ -94,8 +112,9 @@ export function plantSeed(state: GameState, tileId: number, crop: CropId): FarmR
  * 否则断水期会被新窗口追溯覆盖（单测覆盖该边界）。
  */
 export function waterTile(state: GameState, tileId: number): FarmResult {
-  const tile = findTile(state, tileId);
-  if (!tile) return fail('tile-not-found');
+  const r = requireTile(state, tileId);
+  if ('fail' in r) return r.fail;
+  const { tile } = r;
   if (tile.state !== 'growing') return fail('wrong-state');
 
   // 先结算：把 lastGrowthAt 推进到 now，保证新窗口从当下起算
@@ -113,20 +132,25 @@ export function waterTile(state: GameState, tileId: number): FarmResult {
 
 // ---------- 收获 ----------
 
-/** M1 临时经验曲线：升级所需 = 100 × 当前等级（TODO M2 平衡） */
+/**
+ * M2 经验曲线：升级所需 = 80 × level^1.35（前期快、后期缓陡）。
+ * Lv1→2 仅 80 exp（约一茬混合春收），Lv4→5 约 541。
+ * TODO(M7 打磨)：随实际游玩节奏微调指数。
+ */
 export function expToNext(level: number): number {
-  return 100 * level;
+  return Math.round(80 * Math.pow(level, 1.35));
 }
 
-/** 收获经验 ≈ 售价 / 10（M1 临时，M2 随经济平衡调整） */
+/** 收获经验 ≈ 售价 / 10（与售价挂钩：贵作物经验也多，鼓励种长作物） */
 function harvestExp(crop: CropId): number {
   return Math.max(1, Math.round(CROPS[crop].sellPrice / 10));
 }
 
 /** 成熟 → 耕地；产物进背包、加经验、记图鉴 */
 export function harvestTile(state: GameState, tileId: number): FarmResult {
-  const tile = findTile(state, tileId);
-  if (!tile) return fail('tile-not-found');
+  const r = requireTile(state, tileId);
+  if ('fail' in r) return r.fail;
+  const { tile } = r;
   if (tile.state !== 'mature' || !tile.crop) return fail('wrong-state');
 
   const crop = tile.crop;

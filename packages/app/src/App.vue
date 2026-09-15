@@ -12,6 +12,7 @@ import GameCanvas from './components/GameCanvas.vue';
 import SpeedControl from './components/SpeedControl.vue';
 import SaveMenu from './components/SaveMenu.vue';
 import ToolBar from './components/ToolBar.vue';
+import InfoPanel from './components/InfoPanel.vue';
 import { useGameStore } from './stores/game';
 import type { Speed } from '@cozy-farm/core';
 
@@ -85,15 +86,31 @@ function onKeydown(e: KeyboardEvent): void {
       </div>
 
       <aside class="side-panel right hide-narrow">
-        <p class="panel-hint">信息面板</p>
-        <p class="panel-sub">订单 · 好感 · 图鉴<br />（M2+ 接入）</p>
+        <InfoPanel />
       </aside>
     </main>
 
-    <!-- 移动端底部工具条 -->
+    <!-- 移动端底部：工具条 + 面板标签 -->
     <nav class="tabbar">
       <ToolBar />
+      <!-- 移动端信息面板入口（sheet 由下方 mask 层承载） -->
+      <div class="tabbar-tabs">
+        <button class="tab-entry" @click="store.activeTab = 'shop'">🛒</button>
+        <button class="tab-entry" @click="store.activeTab = 'bag'">🎒</button>
+        <button class="tab-entry" @click="store.activeTab = 'codex'">📖</button>
+      </div>
     </nav>
+
+    <!-- 移动端面板 bottom sheet -->
+    <div
+      v-if="store.activeTab"
+      class="sheet-mask"
+      @click.self="store.activeTab = null"
+    >
+      <div class="sheet">
+        <InfoPanel />
+      </div>
+    </div>
 
     <!-- 操作反馈 toast -->
     <div class="toast-wrap" aria-live="polite">
@@ -338,12 +355,59 @@ body,
   }
 
   .tabbar {
-    display: block;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
     background: #f4efe0;
     border-top: 2px solid #e0d8c3;
     padding: 8px 10px;
     /* 底部安全区（iPhone home 条） */
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .tabbar-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tab-entry {
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(61, 90, 61, 0.08);
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .tab-entry:active {
+    background: rgba(127, 176, 105, 0.4);
+  }
+
+  /* 面板 bottom sheet */
+  .sheet-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgba(43, 58, 74, 0.45);
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .sheet {
+    width: 100%;
+    max-height: 68dvh;
+    padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+    background: #fffdf5;
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+    display: flex; /* 让 InfoPanel 的 height:100% 生效，内部可滚 */
+  }
+
+  /* 工具条占据底栏剩余宽度 */
+  .tabbar .toolbar {
+    flex: 1;
+    min-width: 0;
   }
 }
 </style>

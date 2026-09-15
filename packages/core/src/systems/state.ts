@@ -1,22 +1,18 @@
 /**
  * 初始状态工厂 —— 新开一档时的 GameState。
  *
- * 规则（方案 v2 §三 P0）：
- * - 初始 5×4 = 20 格可耕种（id 0~19）
- * - 起始金币 500、等级 1
- * - gameTime 从第 1 天 6:00（日出）开始
+ * 规则（方案 v2 §三 P0，M2 网格模型）：
+ * - 最大网格 10×8 = 80 块（tiles 全量生成，id = row*10+col）
+ * - 初始解锁中心 5×4 = 20 格（col 2~6 / row 2~5），其余锁定待扩地
+ * - 起始金币 500、等级 1；gameTime 从第 1 天 6:00（日出）开始
  */
 
-import { GAME_DAY_MS, SAVE_VERSION } from '../constants';
+import { GAME_DAY_MS, SAVE_VERSION, MAX_GRID_COLS, MAX_GRID_ROWS, initialUnlockedTileIds } from '../constants';
 import type { GameState, Tile } from '../types';
-
-/** 初始可耕种网格：5 列 × 4 行 */
-export const INITIAL_GRID_COLS = 5;
-export const INITIAL_GRID_ROWS = 4;
 
 export function createInitialState(): GameState {
   const tiles: Tile[] = [];
-  for (let i = 0; i < INITIAL_GRID_COLS * INITIAL_GRID_ROWS; i++) {
+  for (let i = 0; i < MAX_GRID_COLS * MAX_GRID_ROWS; i++) {
     tiles.push({
       id: i,
       state: 'wild',
@@ -42,11 +38,11 @@ export function createInitialState(): GameState {
     exp: 0,
 
     tiles,
-    unlockedTileIds: tiles.map((t) => t.id),
+    unlockedTileIds: initialUnlockedTileIds(),
 
     // M2+ 系统占位
     animals: [],
-    // M1 首次体验赠送种子；M2 的正式商店会接管补货与出售。
+    // M1 首次体验赠送种子；商店（M2）接管后续补货。
     inventory: { 'seed:radish': 6, 'seed:wheat': 6, 'seed:potato': 3 },
     npcs: {},
     orders: [],

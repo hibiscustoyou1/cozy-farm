@@ -12,8 +12,8 @@ import Phaser from 'phaser';
 import {
   effectiveGrownMs,
   cropGrowMs,
-  INITIAL_GRID_COLS,
-  INITIAL_GRID_ROWS,
+  MAX_GRID_COLS,
+  MAX_GRID_ROWS,
   type GameState,
 } from '@cozy-farm/core';
 import {
@@ -35,20 +35,27 @@ export interface FarmHooks {
   onTileActivate: (tileId: number) => void;
   /** 可选：当前工具对该格是否可用（hover 高亮红/绿） */
   canActivate?: (tileId: number) => boolean;
+  /**
+   * 可选：锁定块的展示信息（M2 扩地）。
+   * 返回价格 = 相邻可购；undefined = 不可购（远端锁定块）。
+   */
+  lockedTilePrice?: (tileId: number) => number | undefined;
 }
 
 /** 世界坐标下每格显示尺寸（16px 素材 ×4 整数缩放，作物 32px ×2） */
 const TILE_PX = 64;
 
-/** 农场网格世界尺寸 */
-const FARM_W = INITIAL_GRID_COLS * TILE_PX;
-const FARM_H = INITIAL_GRID_ROWS * TILE_PX;
+/** 农场网格世界尺寸（最大 10×8） */
+const FARM_W = MAX_GRID_COLS * TILE_PX;
+const FARM_H = MAX_GRID_ROWS * TILE_PX;
 
 export class FarmScene extends Phaser.Scene {
   private hooks!: FarmHooks;
 
-  /** tileId → 地块底图（帧：wild / tilled） */
+  /** tileId → 地块底图（帧：wild / tilled / 锁定） */
   private tileImages = new Map<number, Phaser.GameObjects.Image>();
+  /** tileId → 锁定块标签（🔒 或 💰价格，M2 扩地） */
+  private lockLabels = new Map<number, Phaser.GameObjects.Text>();
   /** tileId → 作物精灵（growing/mature 时存在） */
   private cropSprites = new Map<number, Phaser.GameObjects.Image>();
   /** tileId → 渲染缓存 key（state|stage），变了才更新纹理 */
@@ -71,6 +78,7 @@ export class FarmScene extends Phaser.Scene {
     this.hooks = data;
     // restart 复用场景时清掉上一世的渲染状态
     this.tileImages.clear();
+    this.lockLabels.clear();
     this.cropSprites.clear();
     this.renderKeys.clear();
     this.bounceTweens.clear();
@@ -98,10 +106,10 @@ export class FarmScene extends Phaser.Scene {
       .setOrigin(0)
       .setTileScale(4);
 
-    // ---- 网格：每格一块底图（可交互） ----
-    for (let row = 0; row < INITIAL_GRID_ROWS; row++) {
-      for (let col = 0; col < INITIAL_GRID_COLS; col++) {
-        const id = row * INITIAL_GRID_COLS + col;
+    // ---- 网格：最大 10×8，每格一块底图（可交互，锁定块也响应点击买地） ----
+    for (let row = 0; row < MAX_GRID_ROWS; row++) {
+      for (let col = 0; col < MAX_GRID_COLS; col++) {
+        const id = row * MAX_GRID_COLS + col;
         const img = this.add
           .image(col * TILE_PX, row * TILE_PX, 'environment', FRAME_WILD)
           .setOrigin(0)
@@ -181,9 +189,29 @@ export class FarmScene extends Phaser.Scene {
   /** 把 GameState 的地块同步到显示对象；force = 首帧全量 */
   private syncTiles(force: boolean): void {
     const state = this.hooks.getState();
+    const unlocked = new Set(state.unlockedTileIds);
 
     for (const tile of state.tiles) {
-      // 计算该格当前渲染 key：底图帧 + 作物阶段
+      const isUnlocked = unlocked.has(tile.id);
+
+      // 锁定块：半透明草地 + 标签（可购价格 / 🔒），不参与作物渲染
+      if (!isUnlocked) {
+        const price = this.hooks.lockedTilePrice?.(tile.id);
+        const key = `locked|${price ?? '-'}`;
+        if (!force && this.renderKeys.get(tile.id) === key) continue;
+        this.renderKeys.set(tile.id, key);
+
+        const img = this.tileImages.get(tile.id);
+        if (img) {
+          img.setFrame(FRAME_GRASS);
+          img.setAlpha(0.45);
+        }
+        this.removeCrop(tile.id);
+        this.updateLockLabel(tile.id, price);
+        continue;
+      }
+
+      // 解锁块：正常渲染
       let stage: GrowthStage | null = null;
       if (tile.state === 'growing' && tile.crop) {
         const progress = effectiveGrownMs(state, tile) / cropGrowMs(tile.crop);
@@ -195,13 +223,16 @@ export class FarmScene extends Phaser.Scene {
       if (!force && this.renderKeys.get(tile.id) === key) continue;
       this.renderKeys.set(tile.id, key);
 
-      // 底图帧：wild 用杂草草帧，其余（tilled/growing/mature）用耕地帧
       const img = this.tileImages.get(tile.id);
-      if (img) img.setFrame(tile.state === 'wild' ? FRAME_WILD : FRAME_TILLED);
+      if (img) {
+        img.setAlpha(1);
+        img.setFrame(tile.state === 'wild' ? FRAME_WILD : FRAME_TILLED);
+      }
+      this.removeLockLabel(tile.id);
 
       // 作物精灵：growing/mature 显示，其他状态销毁
-      const col = tile.id % INITIAL_GRID_COLS;
-      const row = Math.floor(tile.id / INITIAL_GRID_COLS);
+      const col = tile.id % MAX_GRID_COLS;
+      const row = Math.floor(tile.id / MAX_GRID_COLS);
       const cx = col * TILE_PX + TILE_PX / 2;
       const cyBottom = (row + 1) * TILE_PX;
 
@@ -251,6 +282,35 @@ export class FarmScene extends Phaser.Scene {
     }
   }
 
+  /** 锁定块标签：可购显示价格，远端显示 🔒；解锁后移除 */
+  private updateLockLabel(tileId: number, price: number | undefined): void {
+    const col = tileId % MAX_GRID_COLS;
+    const row = Math.floor(tileId / MAX_GRID_COLS);
+    const cx = col * TILE_PX + TILE_PX / 2;
+    const cy = row * TILE_PX + TILE_PX / 2;
+    const text = price !== undefined ? `💰${price}` : '🔒';
+
+    let label = this.lockLabels.get(tileId);
+    if (!label) {
+      label = this.add
+        .text(cx, cy, text, {
+          fontFamily: 'monospace',
+          fontSize: '16px',
+          color: '#3d5a3d',
+        })
+        .setOrigin(0.5)
+        .setDepth(5);
+      this.lockLabels.set(tileId, label);
+    } else {
+      label.setText(text);
+    }
+  }
+
+  private removeLockLabel(tileId: number): void {
+    this.lockLabels.get(tileId)?.destroy();
+    this.lockLabels.delete(tileId);
+  }
+
   private harvestBurst(col: number, row: number): void {
     this.sparkEmitter.explode(
       10,
@@ -266,8 +326,8 @@ export class FarmScene extends Phaser.Scene {
     const world = p.positionToCamera(this.cameras.main) as Phaser.Math.Vector2;
     const col = Math.floor(world.x / TILE_PX);
     const row = Math.floor(world.y / TILE_PX);
-    if (col < 0 || col >= INITIAL_GRID_COLS || row < 0 || row >= INITIAL_GRID_ROWS) return null;
-    return row * INITIAL_GRID_COLS + col;
+    if (col < 0 || col >= MAX_GRID_COLS || row < 0 || row >= MAX_GRID_ROWS) return null;
+    return row * MAX_GRID_COLS + col;
   }
 
   /** hover 高亮：canActivate 绿框 / 否则红框（无判定回调时中性白框） */
@@ -277,8 +337,8 @@ export class FarmScene extends Phaser.Scene {
     if (this.hoverTileId === null) return;
 
     const id = this.hoverTileId;
-    const col = id % INITIAL_GRID_COLS;
-    const row = Math.floor(id / INITIAL_GRID_COLS);
+    const col = id % MAX_GRID_COLS;
+    const row = Math.floor(id / MAX_GRID_COLS);
     const x = col * TILE_PX;
     const y = row * TILE_PX;
 

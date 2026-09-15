@@ -27,6 +27,7 @@ onMounted(() => {
     getState: () => store.gameData,
     onTileActivate: (tileId) => store.applyTool(tileId),
     canActivate: (tileId) => store.canApplyTool(tileId),
+    lockedTilePrice: (tileId) => store.lockedTilePrice(tileId),
   });
 
   // 主循环：推 gameTime（高频，无响应式开销）

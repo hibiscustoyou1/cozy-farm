@@ -13,7 +13,6 @@
 
 import { SAVE_VERSION, SPEED_STEPS } from '../constants';
 import { CROPS } from '../config/crops';
-import { createInitialState } from './state';
 import type { GameState, Tile } from '../types';
 
 // ---------- 信封 ----------
@@ -101,23 +100,45 @@ type Migration = (data: Record<string, unknown>) => Record<string, unknown> | nu
 const MIGRATIONS: readonly Migration[] = [
   /**
    * v1 → v2：v1 是开发期未定版结构（version 字段缺失或为 1），
-   * 字段与 v2 大体一致。策略：以 v2 初始结构为模板浅合并补全，
-   * 旧档已有的值一律保留。
+   * 字段与 v2 大体一致。策略：显式补全 v2 语义的缺失字段，
+   * 旧档已有的值一律保留。不能用 createInitialState 做模板 ——
+   * 模板结构会随后续版本演进（M2 已是 80 块网格），迁移必须定格在 v2 语义。
    */
   (data) => {
     // 最小形状预检：v1 时代就存在的核心字段必须类型正确，
     // 否则垃圾数据会被模板"洗白"成一份合法新档（单测踩过的坑）
     if (typeof data.gameTime !== 'number' || !Number.isFinite(data.gameTime)) return null;
     if (!Array.isArray(data.tiles)) return null;
-    const template = createInitialState();
+
+    const tiles = data.tiles.filter(
+      (t): t is Record<string, unknown> => typeof t === 'object' && t !== null,
+    );
     return {
-      ...template,
       ...data,
-      // inventory 缺失补空对象而非模板初始种子 —— 旧档不能凭空获得道具
+      // v2 语义：当时全部地块默认解锁
+      unlockedTileIds: Array.isArray(data.unlockedTileIds)
+        ? data.unlockedTileIds
+        : tiles.map((t) => t.id).filter((id): id is number => typeof id === 'number'),
       inventory:
         typeof data.inventory === 'object' && data.inventory !== null
           ? data.inventory
           : {},
+      animals: Array.isArray(data.animals) ? data.animals : [],
+      npcs: typeof data.npcs === 'object' && data.npcs !== null ? data.npcs : {},
+      orders: Array.isArray(data.orders) ? data.orders : [],
+      decorations: Array.isArray(data.decorations) ? data.decorations : [],
+      collection: {
+        crops: Array.isArray((data.collection as { crops?: unknown } | undefined)?.crops)
+          ? (data.collection as { crops: unknown[] }).crops
+          : [],
+        dishes: Array.isArray((data.collection as { dishes?: unknown } | undefined)?.dishes)
+          ? (data.collection as { dishes: unknown[] }).dishes
+          : [],
+        fish: Array.isArray((data.collection as { fish?: unknown } | undefined)?.fish)
+          ? (data.collection as { fish: unknown[] }).fish
+          : [],
+      },
+      tiles,
       version: 2,
     };
   },
@@ -141,6 +162,40 @@ const MIGRATIONS: readonly Migration[] = [
       };
     });
     return { ...data, tiles, version: 3 };
+  },
+  /**
+   * v3 → v4：网格扩为 10×8 全量 80 块。旧 20 块（5×4 布局，id=r*5+c）
+   * 重排到新网格居中位置（id=(r+2)*10+(c+2)），unlockedTileIds 同步重映射。
+   */
+  (data) => {
+    if (typeof data.gameTime !== 'number' || !Number.isFinite(data.gameTime)) return null;
+    if (!Array.isArray(data.tiles)) return null;
+    if (!Array.isArray(data.unlockedTileIds)) return null;
+
+    // 旧 id → 新 id（5×4 → 10×8 居中：row+2 / col+2）
+    const remap = (oldId: number): number =>
+      (Math.floor(oldId / 5) + 2) * 10 + ((oldId % 5) + 2);
+
+    const byNewId = new Map<number, Record<string, unknown>>();
+    for (const raw of data.tiles) {
+      if (typeof raw !== 'object' || raw === null) continue;
+      const tile = raw as Record<string, unknown>;
+      if (typeof tile.id !== 'number') continue;
+      byNewId.set(remap(tile.id), { ...tile, id: remap(tile.id) });
+    }
+
+    // 全量 80 块：旧块保留数据，其余为 wild 空地
+    const templateTile = { state: 'wild', crop: null, plantedAt: 0, wateredUntil: 0, grownMs: 0, lastGrowthAt: 0 };
+    const tiles: Array<Record<string, unknown>> = [];
+    for (let i = 0; i < 80; i++) {
+      tiles.push(byNewId.get(i) ?? { ...templateTile, id: i });
+    }
+
+    const unlockedTileIds = data.unlockedTileIds
+      .filter((id): id is number => typeof id === 'number')
+      .map(remap);
+
+    return { ...data, tiles, unlockedTileIds, version: 4 };
   },
 ];
 

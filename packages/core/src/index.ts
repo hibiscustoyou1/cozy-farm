@@ -30,6 +30,14 @@ export {
   OFFLINE_CAP_MS,
   WATERING_LASTS_MS,
   SAVE_VERSION,
+  MAX_GRID_COLS,
+  MAX_GRID_ROWS,
+  INITIAL_GRID_COLS,
+  INITIAL_GRID_ROWS,
+  INITIAL_GRID_COL_OFFSET,
+  INITIAL_GRID_ROW_OFFSET,
+  EXPAND_PRICES,
+  expandPrice,
 } from './constants';
 
 // 配置表
@@ -64,11 +72,20 @@ export {
 } from './systems/farming';
 
 // 初始状态
+export { createInitialState } from './systems/state';
+export { initialUnlockedTileIds } from './constants';
+
+// 经济系统
+export type { SellAllResult } from './systems/economy';
 export {
-  createInitialState,
-  INITIAL_GRID_COLS,
-  INITIAL_GRID_ROWS,
-} from './systems/state';
+  sellCrop,
+  sellAll,
+  canExpandTile,
+  expandTile,
+  isAdjacentToUnlocked,
+  nextExpandPrice,
+  tileCoord,
+} from './systems/economy';
 
 // 存档系统
 export type { SaveSlot, SaveEnvelope, ParsedSave } from './systems/save';

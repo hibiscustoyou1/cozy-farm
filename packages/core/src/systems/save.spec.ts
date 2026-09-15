@@ -98,29 +98,41 @@ describe('parseSave 校验', () => {
   });
 });
 
-// ---------- 版本迁移（当前 SAVE_VERSION = 3） ----------
+// ---------- 版本迁移（当前 SAVE_VERSION = 4） ----------
+
+/** 手工构造 v1/v2 时代的 20 块档（5×4 布局，id=r*5+c） */
+function legacyState(version: number): Record<string, unknown> {
+  const tiles = [];
+  for (let i = 0; i < 20; i++) {
+    tiles.push({ id: i, state: 'wild', crop: null, plantedAt: 0, wateredUntil: 0 });
+  }
+  return {
+    version,
+    createdAt: 1700000000000,
+    gameTime: 999,
+    lastSeen: 1700000001000,
+    speed: 2,
+    gold: 777,
+    level: 4,
+    exp: 100,
+    tiles,
+    unlockedTileIds: tiles.map((t) => t.id),
+  };
+}
 
 describe('旧档迁移', () => {
-  it('version 缺失视为 v1：已有值保留、缺失字段补全', () => {
+  it('version 缺失视为 v1：已有值保留、缺失字段补全、网格重排', () => {
     const old = {
-      // 故意不带 version
-      createdAt: 1700000000000,
-      gameTime: 999,
-      lastSeen: 1700000001000,
-      speed: 2,
-      gold: 777,
-      level: 4,
-      exp: 100,
-      tiles: [
-        { id: 0, state: 'wild', crop: null, plantedAt: 0, wateredUntil: 0 },
-      ],
-      unlockedTileIds: [0],
-      // animals / inventory / npcs / orders / decorations / collection 全缺
+      ...(legacyState(1) as object),
+      version: undefined,
     };
+    delete (old as { version?: number }).version;
+    // animals / inventory / npcs / orders / decorations / collection 全缺
+
     const parsed = parseSave(old);
     expect(parsed).not.toBeNull();
     expect(parsed?.migratedFrom).toBe(1);
-    expect(parsed?.state.version).toBe(3);
+    expect(parsed?.state.version).toBe(4);
     // 旧值保留
     expect(parsed?.state.gold).toBe(777);
     expect(parsed?.state.speed).toBe(2);
@@ -129,39 +141,72 @@ describe('旧档迁移', () => {
     expect(parsed?.state.animals).toEqual([]);
     expect(parsed?.state.inventory).toEqual({});
     expect(parsed?.state.collection).toEqual({ crops: [], dishes: [], fish: [] });
-    // v3 新字段由迁移链补全
-    expect(parsed?.state.tiles[0]?.grownMs).toBe(0);
-    expect(parsed?.state.tiles[0]?.lastGrowthAt).toBe(999);
+    // v4 网格重排：全量 80 块，旧 id 0（r0c0）→ 新 id 22（r2c2）
+    expect(parsed?.state.tiles.length).toBe(80);
+    expect(parsed?.state.unlockedTileIds.length).toBe(20);
+    expect(parsed?.state.unlockedTileIds).toContain(22);
+    const t22 = parsed?.state.tiles[22];
+    expect(t22?.grownMs).toBe(0); // v3 字段由迁移链补全
+    expect(t22?.lastGrowthAt).toBe(999);
   });
 
   it('显式 version: 1 同样走迁移', () => {
-    const parsed = parseSave({ ...sampleState(), version: 1 });
+    const parsed = parseSave(legacyState(1));
     expect(parsed?.migratedFrom).toBe(1);
-    expect(parsed?.state.version).toBe(3);
+    expect(parsed?.state.version).toBe(4);
   });
 
-  it('v2 → v3：grownMs 从旧浇水窗口推导（窗口被 gameTime 截断）', () => {
-    const v2 = {
-      ...sampleState(),
-      version: 2,
+  it('v2 → v4：grownMs 从旧浇水窗口推导 + id 重排', () => {
+    const v2 = legacyState(2) as {
+      gameTime: number;
+      tiles: Array<{ id: number; state: string; crop: string | null; plantedAt: number; wateredUntil: number }>;
     };
-    // gameTime = 123456789；窗口 [123450000, 123450000+3h) 未走完，
-    // 有效生长 = min(gameTime, wateredUntil) - plantedAt = 6789
-    const tile = v2.tiles[12]!;
-    v2.tiles[12] = {
-      ...tile,
-      state: 'growing' as const,
-      crop: 'corn' as const,
-      plantedAt: 123450000,
-      wateredUntil: 123450000 + 3 * 60 * 60 * 1000,
-    };
+    // 旧 id 12（r2c2）：窗口 [123450000, +3h) 被 gameTime=123456789 截断
+    v2.gameTime = 123456789;
+    const t12 = v2.tiles[12]!;
+    t12.state = 'growing';
+    t12.crop = 'corn';
+    t12.plantedAt = 123450000;
+    t12.wateredUntil = 123450000 + 3 * 60 * 60 * 1000;
 
     const parsed = parseSave(v2);
     expect(parsed?.migratedFrom).toBe(2);
-    expect(parsed?.state.version).toBe(3);
-    const migrated = parsed?.state.tiles[12];
+    expect(parsed?.state.version).toBe(4);
+    // 旧 id 12 → 新 id (2+2)*10+(2+2) = 44
+    const migrated = parsed?.state.tiles[44];
+    expect(migrated?.crop).toBe('corn');
     expect(migrated?.grownMs).toBe(123456789 - 123450000);
-    expect(migrated?.lastGrowthAt).toBe(v2.gameTime);
+    expect(migrated?.lastGrowthAt).toBe(123456789);
+  });
+
+  it('v3 → v4：M1 旧档直接重排（grownMs 保留、进度不丢）', () => {
+    const v3 = legacyState(3) as {
+      gameTime: number;
+      tiles: Array<Record<string, unknown>>;
+    };
+    // M1 版本产出的 v3 档：tiles 带 grownMs/lastGrowthAt
+    // 旧 id 7（r1c2）种着半程小麦，累计 3 游戏小时
+    v3.tiles[7] = {
+      ...v3.tiles[7]!,
+      state: 'growing',
+      crop: 'wheat',
+      plantedAt: 100,
+      wateredUntil: 100 + 24 * 60 * 60 * 1000,
+      grownMs: 3 * 60 * 60 * 1000,
+      lastGrowthAt: 500,
+    };
+
+    const parsed = parseSave(v3);
+    expect(parsed?.migratedFrom).toBe(3);
+    expect(parsed?.state.version).toBe(4);
+    expect(parsed?.state.tiles.length).toBe(80);
+    // 旧 id 7（r1c2）→ 新 id (1+2)*10+(2+2) = 34
+    const t34 = parsed?.state.tiles[34];
+    expect(t34?.crop).toBe('wheat');
+    expect(t34?.grownMs).toBe(3 * 60 * 60 * 1000); // 进度原样保留
+    expect(parsed?.state.unlockedTileIds).toContain(34);
+    // 其余解锁块也都在（20 个）
+    expect(parsed?.state.unlockedTileIds.length).toBe(20);
   });
 });
 
