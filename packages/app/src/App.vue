@@ -1,16 +1,17 @@
 <script setup lang="ts">
 /**
- * 根组件 —— 双端响应式布局骨架（M0）
+ * 根组件 —— 双端响应式布局（M1：种植循环）
  *
  * 桌面 (≥1024px)：顶栏 + [工具栏 | 画布 | 信息面板] 三栏
- * 移动端 (<768px)：顶栏(紧凑) + 全屏画布 + 底部标签栏
+ * 移动端 (<768px)：顶栏(紧凑) + 全屏画布 + 底部工具条
  *
- * TODO(M0+)：工具栏（锄头/种子/水壶）、信息面板内容、底部标签页路由
+ * TODO(M2+)：信息面板（订单/好感/图鉴）、底部标签页路由
  */
 import { onBeforeUnmount, onMounted } from 'vue';
 import GameCanvas from './components/GameCanvas.vue';
 import SpeedControl from './components/SpeedControl.vue';
 import SaveMenu from './components/SaveMenu.vue';
+import ToolBar from './components/ToolBar.vue';
 import { useGameStore } from './stores/game';
 import type { Speed } from '@cozy-farm/core';
 
@@ -53,12 +54,7 @@ function onKeydown(e: KeyboardEvent): void {
   else if (e.key === '4') store.setSpeed(10);
 }
 
-// ---------- 移动端底部标签（M0 占位） ----------
-const TABS = [
-  { key: 'shop', label: '商店' },
-  { key: 'bag', label: '背包' },
-  { key: 'codex', label: '图鉴' },
-] as const;
+// ---------- 移动端工具条（M1：种植工具；M2+ 加商店/背包/图鉴标签） ----------
 </script>
 
 <template>
@@ -81,8 +77,7 @@ const TABS = [
     <!-- 主区域：桌面三栏 / 移动全屏画布 -->
     <main class="main-area">
       <aside class="side-panel left hide-narrow">
-        <p class="panel-hint">工具栏</p>
-        <p class="panel-sub">锄头 · 种子 · 水壶<br />（M1 接入）</p>
+        <ToolBar />
       </aside>
 
       <div class="canvas-wrap">
@@ -95,12 +90,19 @@ const TABS = [
       </aside>
     </main>
 
-    <!-- 移动端底部标签栏 -->
+    <!-- 移动端底部工具条 -->
     <nav class="tabbar">
-      <button v-for="t in TABS" :key="t.key" class="tab-btn">
-        {{ t.label }}
-      </button>
+      <ToolBar />
     </nav>
+
+    <!-- 操作反馈 toast -->
+    <div class="toast-wrap" aria-live="polite">
+      <TransitionGroup name="toast">
+        <div v-for="t in store.toasts" :key="t.id" class="toast" :class="t.tone">
+          {{ t.text }}
+        </div>
+      </TransitionGroup>
+    </div>
 
     <!-- 离线结算面板 -->
     <div v-if="store.offlineReport" class="modal-mask" @click.self="store.dismissOfflineReport()">
@@ -221,10 +223,55 @@ body,
   line-height: 1.8;
 }
 
-/* ---------- 移动端底部标签栏 ---------- */
+/* ---------- 移动端底部工具条 ---------- */
 .tabbar {
   flex-shrink: 0;
   display: none; /* 桌面隐藏 */
+}
+
+/* ---------- 操作反馈 toast ---------- */
+.toast-wrap {
+  position: fixed;
+  top: calc(64px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none; /* toast 不挡操作 */
+}
+
+.toast {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(61, 90, 61, 0.92);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.toast.good {
+  background: rgba(96, 146, 82, 0.95);
+}
+
+.toast.bad {
+  background: rgba(179, 84, 58, 0.95);
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
 }
 
 /* ---------- 离线结算 modal ---------- */
@@ -291,21 +338,12 @@ body,
   }
 
   .tabbar {
-    display: flex;
+    display: block;
     background: #f4efe0;
     border-top: 2px solid #e0d8c3;
+    padding: 8px 10px;
     /* 底部安全区（iPhone home 条） */
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .tab-btn {
-    flex: 1;
-    min-height: 52px;
-    border: none;
-    background: transparent;
-    font-size: 14px;
-    color: #3d5a3d;
-    cursor: pointer;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
 }
 </style>

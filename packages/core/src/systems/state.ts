@@ -23,6 +23,8 @@ export function createInitialState(): GameState {
       crop: null,
       plantedAt: 0,
       wateredUntil: 0,
+      grownMs: 0,
+      lastGrowthAt: 0,
     });
   }
 
@@ -44,7 +46,8 @@ export function createInitialState(): GameState {
 
     // M2+ 系统占位
     animals: [],
-    inventory: {},
+    // M1 首次体验赠送种子；M2 的正式商店会接管补货与出售。
+    inventory: { 'seed:radish': 6, 'seed:wheat': 6, 'seed:potato': 3 },
     npcs: {},
     orders: [],
     decorations: [],

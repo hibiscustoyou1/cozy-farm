@@ -98,9 +98,9 @@ describe('parseSave 校验', () => {
   });
 });
 
-// ---------- v1 迁移 ----------
+// ---------- 版本迁移（当前 SAVE_VERSION = 3） ----------
 
-describe('v1 → v2 迁移', () => {
+describe('旧档迁移', () => {
   it('version 缺失视为 v1：已有值保留、缺失字段补全', () => {
     const old = {
       // 故意不带 version
@@ -120,7 +120,7 @@ describe('v1 → v2 迁移', () => {
     const parsed = parseSave(old);
     expect(parsed).not.toBeNull();
     expect(parsed?.migratedFrom).toBe(1);
-    expect(parsed?.state.version).toBe(2);
+    expect(parsed?.state.version).toBe(3);
     // 旧值保留
     expect(parsed?.state.gold).toBe(777);
     expect(parsed?.state.speed).toBe(2);
@@ -129,12 +129,39 @@ describe('v1 → v2 迁移', () => {
     expect(parsed?.state.animals).toEqual([]);
     expect(parsed?.state.inventory).toEqual({});
     expect(parsed?.state.collection).toEqual({ crops: [], dishes: [], fish: [] });
+    // v3 新字段由迁移链补全
+    expect(parsed?.state.tiles[0]?.grownMs).toBe(0);
+    expect(parsed?.state.tiles[0]?.lastGrowthAt).toBe(999);
   });
 
   it('显式 version: 1 同样走迁移', () => {
     const parsed = parseSave({ ...sampleState(), version: 1 });
     expect(parsed?.migratedFrom).toBe(1);
-    expect(parsed?.state.version).toBe(2);
+    expect(parsed?.state.version).toBe(3);
+  });
+
+  it('v2 → v3：grownMs 从旧浇水窗口推导（窗口被 gameTime 截断）', () => {
+    const v2 = {
+      ...sampleState(),
+      version: 2,
+    };
+    // gameTime = 123456789；窗口 [123450000, 123450000+3h) 未走完，
+    // 有效生长 = min(gameTime, wateredUntil) - plantedAt = 6789
+    const tile = v2.tiles[12]!;
+    v2.tiles[12] = {
+      ...tile,
+      state: 'growing' as const,
+      crop: 'corn' as const,
+      plantedAt: 123450000,
+      wateredUntil: 123450000 + 3 * 60 * 60 * 1000,
+    };
+
+    const parsed = parseSave(v2);
+    expect(parsed?.migratedFrom).toBe(2);
+    expect(parsed?.state.version).toBe(3);
+    const migrated = parsed?.state.tiles[12];
+    expect(migrated?.grownMs).toBe(123456789 - 123450000);
+    expect(migrated?.lastGrowthAt).toBe(v2.gameTime);
   });
 });
 

@@ -63,13 +63,11 @@ export function settleOffline(state: GameState, nowReal: number): OfflineReport 
   const before = state.gameTime;
   state.gameTime += realElapsed;
 
-  // 结算地块：成熟判定（浇水窗口内的时间才计入生长）
+  // 结算地块：统一走累计模型（断水时段不计入生长）
   const matured = new Set<string>();
-  for (const tile of state.tiles) {
-    if (tile.state === 'growing' && isMature(state, tile.id)) {
-      tile.state = 'mature';
-      if (tile.crop) matured.add(tile.crop);
-    }
+  for (const tileId of advanceGrowth(state)) {
+    const tile = state.tiles.find((t) => t.id === tileId);
+    if (tile?.crop) matured.add(tile.crop);
   }
   report.maturedCrops = [...matured] as OfflineReport['maturedCrops'];
 
@@ -80,41 +78,76 @@ export function settleOffline(state: GameState, nowReal: number): OfflineReport 
   return report;
 }
 
-// ---------- 生长判定 ----------
+// ---------- 生长判定（M1：累计模型） ----------
+
+import { CROPS } from '../config/crops';
+import type { Tile } from '../types';
+
+/** 作物生长所需的游戏毫秒（CROPS 数值表唯一来源） */
+export function cropGrowMs(crop: Tile['crop']): number {
+  if (!crop) return Number.POSITIVE_INFINITY;
+  return CROPS[crop].growMs;
+}
 
 /**
- * 地块是否成熟。
+ * 结算所有 growing 地块的累计生长进度（幂等）。
+ *
+ * 模型：湿润窗口 = [plantedAt, wateredUntil)。断水时段不计入，
+ * 补浇后 wateredUntil 前移，从断点继续累计 —— 生长只暂停、不倒退。
+ * 由主循环每帧调用（app 层 store.frame），离线结算内部也会调用。
+ *
+ * @returns 本次新成熟的地块 id（供 UI 弹提示；空数组 = 无新成熟）
+ */
+export function advanceGrowth(state: GameState): number[] {
+  const newlyMature: number[] = [];
+  const now = state.gameTime;
+
+  for (const tile of state.tiles) {
+    if (tile.state !== 'growing' || !tile.crop) {
+      continue; // 未种植/已成熟/已收获的地块无需结算
+    }
+
+    const from = Math.max(tile.lastGrowthAt, tile.plantedAt);
+    if (now > from) {
+      // [from, now) 与湿润窗口 [plantedAt, wateredUntil) 的交集
+      const wetEnd = Math.min(now, tile.wateredUntil);
+      if (wetEnd > from) tile.grownMs += wetEnd - from;
+      tile.lastGrowthAt = now;
+    }
+
+    if (tile.grownMs >= cropGrowMs(tile.crop)) {
+      tile.state = 'mature';
+      newlyMature.push(tile.id);
+    }
+  }
+  return newlyMature;
+}
+
+/**
+ * 地块是否成熟（只读判定，不推进进度）。
  * 有效生长 = 浇水窗口覆盖的时间；缺水只暂停、不倒退（无失败原则）。
  */
 export function isMature(state: GameState, tileId: number): boolean {
   const tile = state.tiles.find((t) => t.id === tileId);
   if (!tile || tile.state !== 'growing' || !tile.crop) return false;
-
-  const growMs = cropGrowMs(tile.crop);
-  const elapsed = effectiveGrownMs(state, tile);
-  return elapsed >= growMs;
+  return tile.grownMs >= cropGrowMs(tile.crop);
 }
 
 /**
- * 计算地块已有效生长的游戏毫秒数（浇水窗口内的部分）。
- *
- * 简化模型（v2 骨架）：
- *   生长有效当且仅当 gameTime 处于 [plantedAt, wateredUntil) 窗口内。
- *   浇水会把 wateredUntil 延长（GrowthSystem 负责，见 TODO）。
+ * 计算地块当前有效生长毫秒数（纯读，渲染层画进度条/选阶段用）。
+ * = 已结算的 grownMs + 上次结算以来仍在湿润窗口内的增量。
  */
 export function effectiveGrownMs(state: GameState, tile: {
   plantedAt: number;
   wateredUntil: number;
+  grownMs: number;
+  lastGrowthAt: number;
 }): number {
   const now = state.gameTime;
-  const windowEnd = Math.min(now, tile.wateredUntil);
-  return Math.max(0, windowEnd - tile.plantedAt);
-}
-
-// TODO(M1)：cropGrowMs 将由 config/crops.ts 的 CROPS 表提供；
-// 此处临时内联以保持骨架可编译，M1 接入真实配置表后删除。
-function cropGrowMs(_crop: string): number {
-  return Number.POSITIVE_INFINITY;
+  const from = Math.max(tile.lastGrowthAt, tile.plantedAt);
+  const wetEnd = Math.min(now, tile.wateredUntil);
+  const pending = wetEnd > from ? wetEnd - from : 0;
+  return tile.grownMs + pending;
 }
 
 // ---------- 日历换算（供 UI 展示） ----------

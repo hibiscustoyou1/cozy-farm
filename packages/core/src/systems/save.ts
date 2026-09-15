@@ -110,7 +110,37 @@ const MIGRATIONS: readonly Migration[] = [
     if (typeof data.gameTime !== 'number' || !Number.isFinite(data.gameTime)) return null;
     if (!Array.isArray(data.tiles)) return null;
     const template = createInitialState();
-    return { ...template, ...data, version: SAVE_VERSION };
+    return {
+      ...template,
+      ...data,
+      // inventory 缺失补空对象而非模板初始种子 —— 旧档不能凭空获得道具
+      inventory:
+        typeof data.inventory === 'object' && data.inventory !== null
+          ? data.inventory
+          : {},
+      version: 2,
+    };
+  },
+  /**
+   * v2 → v3：地块改为保存累计有效生长时长，才能在多次浇水之间
+   * 正确地暂停与续长。旧档只有单个浇水窗口，累计值可直接推导。
+   */
+  (data) => {
+    if (typeof data.gameTime !== 'number' || !Number.isFinite(data.gameTime)) return null;
+    if (!Array.isArray(data.tiles)) return null;
+    const gameTime = data.gameTime;
+    const tiles = data.tiles.map((raw) => {
+      if (typeof raw !== 'object' || raw === null) return raw;
+      const tile = raw as Record<string, unknown>;
+      const plantedAt = typeof tile.plantedAt === 'number' ? tile.plantedAt : 0;
+      const wateredUntil = typeof tile.wateredUntil === 'number' ? tile.wateredUntil : 0;
+      return {
+        ...tile,
+        grownMs: Math.max(0, Math.min(gameTime, wateredUntil) - plantedAt),
+        lastGrowthAt: gameTime,
+      };
+    });
+    return { ...data, tiles, version: 3 };
   },
 ];
 
@@ -132,7 +162,10 @@ function isValidTile(v: unknown): v is Tile {
     TILE_STATES.includes(t.state) &&
     (t.crop === null || (typeof t.crop === 'string' && CROP_IDS.has(t.crop))) &&
     isFiniteNumber(t.plantedAt) &&
-    isFiniteNumber(t.wateredUntil)
+    isFiniteNumber(t.wateredUntil) &&
+    // v3 起累计生长进度入档；缺失由迁移链补，这里只挡类型错误
+    (t.grownMs === undefined || isFiniteNumber(t.grownMs)) &&
+    (t.lastGrowthAt === undefined || isFiniteNumber(t.lastGrowthAt))
   );
 }
 
@@ -164,6 +197,12 @@ function isValidGameState(v: unknown): v is GameState {
 function repairSave(s: GameState): GameState {
   return {
     ...s,
+    // tiles 的 v3 新字段：迁移链已补，这里兜底手改档漏删字段的情况
+    tiles: s.tiles.map((t) => ({
+      ...t,
+      grownMs: Number.isFinite(t.grownMs) ? t.grownMs : 0,
+      lastGrowthAt: Number.isFinite(t.lastGrowthAt) ? t.lastGrowthAt : s.gameTime,
+    })),
     animals: Array.isArray(s.animals) ? s.animals : [],
     inventory:
       typeof s.inventory === 'object' && s.inventory !== null

@@ -39,14 +39,29 @@ export { CROPS, cropsBySeason } from './config/crops';
 export {
   tick,
   settleOffline,
+  advanceGrowth,
   isMature,
   effectiveGrownMs,
+  cropGrowMs,
   currentDay,
   currentSeasonDay,
   currentSeason,
   currentClockHours,
   isDaytime,
 } from './systems/time';
+
+// 种植系统
+export type { FarmResult, FarmFailReason } from './systems/farming';
+export {
+  seedKey,
+  cropKey,
+  tillTile,
+  plantSeed,
+  waterTile,
+  harvestTile,
+  buySeed,
+  expToNext,
+} from './systems/farming';
 
 // 初始状态
 export {

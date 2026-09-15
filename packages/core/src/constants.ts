@@ -52,4 +52,4 @@ export const WATERING_LASTS_MS = GAME_DAY_MS;
  * 当前存档结构版本（= GameState.version）。
  * 结构变更时递增此值并在 systems/save.ts 的 MIGRATIONS 里补迁移函数。
  */
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;

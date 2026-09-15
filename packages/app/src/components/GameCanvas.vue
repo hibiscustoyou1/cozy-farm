@@ -22,8 +22,12 @@ let clockTimer: ReturnType<typeof setInterval> | undefined;
 onMounted(() => {
   if (!containerEl.value) return;
 
-  // 挂载 Phaser（注入只读访问器，单向数据流）
-  game.value = createGame(containerEl.value, () => store.gameData);
+  // 挂载 Phaser（注入只读状态 + 输入上报，单向数据流）
+  game.value = createGame(containerEl.value, {
+    getState: () => store.gameData,
+    onTileActivate: (tileId) => store.applyTool(tileId),
+    canActivate: (tileId) => store.canApplyTool(tileId),
+  });
 
   // 主循环：推 gameTime（高频，无响应式开销）
   const loop = (ts: number) => {

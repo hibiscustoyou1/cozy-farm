@@ -15,9 +15,10 @@
 - ✅ 市场调研完成（`docs/田园经营游戏市场调研报告.md`）
 - ✅ 方案设计 v2 定稿（`docs/田园小游戏方案设计.md`）
 - ✅ Monorepo 骨架落地并首次提交（main `5abe16a`）：三包架构 + 时间系统（gameTime/调速/离线结算）+ 双端布局骨架，install / typecheck / dev / build 全绿
-- ✅ M0 收尾：存档框架（`f18bb98` 之后）：core 存档系统（信封/校验/迁移链，`SAVE_VERSION=2`）+ localStorage 双写轮换（损坏自愈/内存降级）+ 自动存档（30s 定时/关键操作 3s 防抖/页面隐藏与关闭前）+ JSON 导入导出 + 存档菜单（手动保存/重置）；vitest 33 用例全绿
+- ✅ M0 收尾：存档框架（`f18bb98` 之后）：core 存档系统（信封/校验/迁移链）+ localStorage 双写轮换（损坏自愈/内存降级）+ 自动存档（30s 定时/关键操作 3s 防抖/页面隐藏与关闭前）+ JSON 导入导出 + 存档菜单（手动保存/重置）；vitest 全绿
 - ✅ M1 前置：静态资源基础已入库：Ellen0ra 16×16 环境图块为主视觉，Mossbell / LPC / OpenGameArt / Tiny Farm 作补充候选，临时 BGM 与原创像素图标已就绪；见 `docs/资源来源与授权.md`
-- ⬜ M1：种植循环（瓦片地图渲染 + 地块状态机 + 锄地/种植/浇水/收获交互；关键操作完成后调 `store.notifyGameAction()` 触发防抖存档）
+- ✅ M1：种植循环：core `systems/farming.ts`（锄/种/浇/收 + 快速买种 + 经验升级）+ 生长累计模型（断水暂停、补浇续长；存档升 v3：tile 增 `grownMs`/`lastGrowthAt`）+ Phaser 农场网格（5×4、拖动批量、hover 红绿高亮、成熟弹跳、收获粒子）+ 工具栏（桌面左栏/移动底栏）+ 种子面板（当季可购、反季可种）+ toast 反馈
+- ⬜ M2 经济：正式商店 + 背包出售 + 扩地（200/500/1200/3000…上限 10×8=80 格）+ 经验曲线平衡 + 图鉴雏形
 
 里程碑路线图见方案文档 §六。
 
@@ -65,7 +66,15 @@ packages/
 - localStorage 两槽 `cozy-farm:save:a|b` 交替写，信封 `seq` 比新旧；一槽损坏自动回退另一槽
 - localStorage 不可用（隐私模式等）→ 内存降级，UI 顶栏 💾 变红提示
 - 自动存档三时机：30s 定时 + 关键操作 3s 防抖（`store.notifyGameAction()`）+ 页面隐藏/关闭前
-- 存档结构变更：递增 `SAVE_VERSION`（constants.ts）+ 在 `MIGRATIONS` 链补函数 + 补单测
+- 当前 `SAVE_VERSION=3`（v3：tile 增 `grownMs`/`lastGrowthAt` 支持断水续长）；结构变更：递增 `SAVE_VERSION` + 在 `MIGRATIONS` 链补函数 + 补单测
+
+## 种植循环速查（M1）
+
+- 状态机：`wild →(锄)→ tilled →(种)→ growing →(浇水保湿 1 游戏日)→ mature →(收)→ tilled`
+- 生长模型：湿润窗口 `[plantedAt, wateredUntil)` 内的 gameTime 才计入 `grownMs`；断水只暂停不倒退，补浇从断点续长（`advanceGrowth` 每帧结算）
+- 种植不限季（种子是玩家财产）；季节只过滤商店货架；等级解锁作物
+- 交互：game 层 `FarmHooks`（getState 只读 + onTileActivate 上报 + canActivate 高亮判定），工具语义由 app store `applyTool` 解释
+- 作物素材：Mossbell 6 物种 × 4 阶段；corn/eggplant/watermelon 借近似素材 + tint（`game/src/visuals.ts`，TODO 换专属素材）
 
 ## 常用命令
 

@@ -52,10 +52,14 @@ export interface Tile {
   state: TileState;
   /** 仅 state 为 growing/mature 时有效 */
   crop: CropId | null;
-  /** 种下时刻（gameTime 坐标） */
+  /** 种下时刻（gameTime 坐标，主要用于详情与存档诊断） */
   plantedAt: number;
   /** 湿度保持到（gameTime 坐标）；过期则生长暂停，浇水后延长 */
   wateredUntil: number;
+  /** 已累计的有效生长时长；断水期间不增加，补浇后从原进度继续 */
+  grownMs: number;
+  /** 上次结算生长进度的 gameTime 坐标 */
+  lastGrowthAt: number;
 }
 
 // ---------- 存档根 ----------
