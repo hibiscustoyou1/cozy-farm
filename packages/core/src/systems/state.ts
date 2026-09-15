@@ -7,7 +7,7 @@
  * - gameTime 从第 1 天 6:00（日出）开始
  */
 
-import { GAME_DAY_MS } from '../constants';
+import { GAME_DAY_MS, SAVE_VERSION } from '../constants';
 import type { GameState, Tile } from '../types';
 
 /** 初始可耕种网格：5 列 × 4 行 */
@@ -27,7 +27,7 @@ export function createInitialState(): GameState {
   }
 
   return {
-    version: 2,
+    version: SAVE_VERSION,
     createdAt: Date.now(),
 
     // 从第 1 个游戏日的日出（6:00）开始

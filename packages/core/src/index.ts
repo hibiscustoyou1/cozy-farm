@@ -29,6 +29,7 @@ export {
   OFFLINE_SPEED,
   OFFLINE_CAP_MS,
   WATERING_LASTS_MS,
+  SAVE_VERSION,
 } from './constants';
 
 // 配置表
@@ -53,3 +54,12 @@ export {
   INITIAL_GRID_COLS,
   INITIAL_GRID_ROWS,
 } from './systems/state';
+
+// 存档系统
+export type { SaveSlot, SaveEnvelope, ParsedSave } from './systems/save';
+export {
+  serializeSave,
+  parseSave,
+  makeEnvelope,
+  parseEnvelope,
+} from './systems/save';

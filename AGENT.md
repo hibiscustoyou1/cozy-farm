@@ -15,9 +15,9 @@
 - ✅ 市场调研完成（`docs/田园经营游戏市场调研报告.md`）
 - ✅ 方案设计 v2 定稿（`docs/田园小游戏方案设计.md`）
 - ✅ Monorepo 骨架落地并首次提交（main `5abe16a`）：三包架构 + 时间系统（gameTime/调速/离线结算）+ 双端布局骨架，install / typecheck / dev / build 全绿
-- ⬜ M0 收尾：存档框架（localStorage 双写轮换 + JSON 导入导出 + 关键操作自动存档）
+- ✅ M0 收尾：存档框架（`f18bb98` 之后）：core 存档系统（信封/校验/迁移链，`SAVE_VERSION=2`）+ localStorage 双写轮换（损坏自愈/内存降级）+ 自动存档（30s 定时/关键操作 3s 防抖/页面隐藏与关闭前）+ JSON 导入导出 + 存档菜单（手动保存/重置）；vitest 33 用例全绿
 - ✅ M1 前置：静态资源基础已入库：Ellen0ra 16×16 环境图块为主视觉，Mossbell / LPC / OpenGameArt / Tiny Farm 作补充候选，临时 BGM 与原创像素图标已就绪；见 `docs/资源来源与授权.md`
-- ⬜ M1：种植循环（瓦片地图渲染 + 地块状态机 + 锄地/种植/浇水/收获交互）
+- ⬜ M1：种植循环（瓦片地图渲染 + 地块状态机 + 锄地/种植/浇水/收获交互；关键操作完成后调 `store.notifyGameAction()` 触发防抖存档）
 
 里程碑路线图见方案文档 §六。
 
@@ -59,6 +59,14 @@ packages/
 - 季节：7 游戏日一季，4 季一年；换季不惩罚（在地作物继续长，只是种子下架）
 - 浇水：保湿 1 游戏日，过期**暂停**生长（不枯萎 —— 无失败原则）
 
+## 存档框架速查（M0）
+
+- 分层：core `systems/save.ts`（纯逻辑：信封/校验/迁移链）↔ app `save/`（storage.ts 双写轮换、autoSave.ts 三时机、fileIO.ts 导入导出）
+- localStorage 两槽 `cozy-farm:save:a|b` 交替写，信封 `seq` 比新旧；一槽损坏自动回退另一槽
+- localStorage 不可用（隐私模式等）→ 内存降级，UI 顶栏 💾 变红提示
+- 自动存档三时机：30s 定时 + 关键操作 3s 防抖（`store.notifyGameAction()`）+ 页面隐藏/关闭前
+- 存档结构变更：递增 `SAVE_VERSION`（constants.ts）+ 在 `MIGRATIONS` 链补函数 + 补单测
+
 ## 常用命令
 
 ```bash
@@ -66,6 +74,7 @@ pnpm install        # 安装依赖（workspace 全部包）
 pnpm dev            # 启动开发服务器（host 模式，手机可访问 http://<本机IP>:5173）
 pnpm build          # 构建 app 产物
 pnpm typecheck      # 全部包类型检查
+pnpm test           # 全部包单测（core + app，vitest）
 ```
 
 ## 约定

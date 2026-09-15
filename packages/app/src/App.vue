@@ -10,6 +10,7 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 import GameCanvas from './components/GameCanvas.vue';
 import SpeedControl from './components/SpeedControl.vue';
+import SaveMenu from './components/SaveMenu.vue';
 import { useGameStore } from './stores/game';
 import type { Speed } from '@cozy-farm/core';
 
@@ -21,11 +22,15 @@ onMounted(() => {
   // 读档时执行离线结算（"你不在的时候…"）
   store.settleOnLoad();
 
+  // 自动存档：30s 定时 + 关键操作防抖 + 页面隐藏/关闭前
+  store.autoSave.start();
+
   // 桌面快捷键：空格 = 暂停/恢复，1/2/3/4 = 1x/2x/5x/10x
   window.addEventListener('keydown', onKeydown);
 });
 
 onBeforeUnmount(() => {
+  store.autoSave.stop();
   window.removeEventListener('keydown', onKeydown);
 });
 
@@ -69,6 +74,7 @@ const TABS = [
         <span class="stat hide-narrow">{{ store.seasonLabel }}</span>
         <span class="stat clock">🕐 {{ store.clockLabel }}</span>
         <SpeedControl />
+        <SaveMenu />
       </div>
     </header>
 

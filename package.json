@@ -8,7 +8,8 @@
     "dev": "pnpm --filter @cozy-farm/app dev",
     "build": "pnpm --filter @cozy-farm/app build",
     "preview": "pnpm --filter @cozy-farm/app preview",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
   },
   "engines": {
     "node": ">=20.19"
