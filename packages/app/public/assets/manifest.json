@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "policy": "个人学习项目：允许免费、AI 辅助和不同许可条件的素材；使用前必须记录来源与限制。运行场景以 16×16 像素、低饱和暖色为主视觉基准。",
+  "environment": {
+    "primary": {
+      "id": "ellen0ra-cozy-farm",
+      "path": "/assets/environment/ellen0ra/cozy-farm-tileset.png",
+      "tileSize": 16,
+      "source": "https://ellen0ra.itch.io/cozy-farm-tileset",
+      "use": "M0/M1 的草地、小径、耕地、花草、树木、栅栏和石头环境基础。"
+    },
+    "supplementary": [
+      {
+        "id": "mossbell-orchard",
+        "path": "/assets/world/mossbell/",
+        "tileSize": 32,
+        "source": "https://certainity.itch.io/mossbell-orchard-cozy-pixel-farm-starter-pack",
+        "use": "建筑、动物、六种作物四阶段与水面前景候选。"
+      },
+      {
+        "id": "lpc-farming",
+        "path": "/assets/world/lpc-daniel-eddeland/",
+        "tileSize": 32,
+        "source": "https://opengameart.org/content/lpc-farming-tilesets-magic-animations-and-ui-elements",
+        "use": "耕地、围栏、植物与农业道具的补充候选。"
+      },
+      {
+        "id": "opengameart-cc0",
+        "path": "/assets/world/opengameart-cc0/",
+        "source": "https://opengameart.org/",
+        "use": "等距农场与季节图块的参考/补充候选。"
+      },
+      {
+        "id": "tiny-farm-moon-veil",
+        "path": "/assets/world/tiny-farm-moon-veil/FarmSpriteSheet.aseprite",
+        "tileSize": 16,
+        "source": "https://moon-veil.itch.io/tiny-farm-asset-pack-16x16",
+        "use": "16×16 建筑、地面、树木与动物的待导出源文件。"
+      }
+    ]
+  },
+  "audio": {
+    "bgm": [
+      {
+        "id": "pleasant-creek",
+        "path": "/assets/audio/matthew-pablo/pleasant-creek.mp3",
+        "source": "https://opengameart.org/content/pleasant-creek",
+        "credit": "Matthew Pablo",
+        "license": "CC BY 3.0",
+        "use": "M0 临时低音量循环 BGM；待音频设置模块接入。"
+      }
+    ]
+  }
+}

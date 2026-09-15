@@ -16,7 +16,7 @@
 - ✅ 方案设计 v2 定稿（`docs/田园小游戏方案设计.md`）
 - ✅ Monorepo 骨架落地并首次提交（main `5abe16a`）：三包架构 + 时间系统（gameTime/调速/离线结算）+ 双端布局骨架，install / typecheck / dev / build 全绿
 - ⬜ M0 收尾：存档框架（localStorage 双写轮换 + JSON 导入导出 + 关键操作自动存档）
-- ⬜ M1 前置：从 itch.io 候选清单定一套像素资源（候选见 `docs/美术风格.md`）
+- ✅ M1 前置：静态资源基础已入库：Ellen0ra 16×16 环境图块为主视觉，Mossbell / LPC / OpenGameArt / Tiny Farm 作补充候选，临时 BGM 与原创像素图标已就绪；见 `docs/资源来源与授权.md`
 - ⬜ M1：种植循环（瓦片地图渲染 + 地块状态机 + 锄地/种植/浇水/收获交互）
 
 里程碑路线图见方案文档 §六。

@@ -1,0 +1,636 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "name": "Mossbell Sprites",
+  "tilewidth": 96,
+  "tileheight": 96,
+  "tilecount": 48,
+  "columns": 0,
+  "objectalignment": "bottomleft",
+  "tiles": [
+    {
+      "id": 0,
+      "image": "../sprites/world/pear_tree.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "pear_tree"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "image": "../sprites/world/blossom_tree.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "blossom_tree"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "image": "../sprites/world/conifer_tree.png",
+      "imagewidth": 64,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "conifer_tree"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "image": "../sprites/world/daisy_bush.png",
+      "imagewidth": 64,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "daisy_bush"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "image": "../sprites/world/berry_bush.png",
+      "imagewidth": 64,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "berry_bush"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "image": "../sprites/world/mushroom_cluster.png",
+      "imagewidth": 48,
+      "imageheight": 40,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "mushroom_cluster"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "image": "../sprites/world/farm_cottage.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "farm_cottage"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "image": "../sprites/world/greenhouse.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "greenhouse"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "image": "../sprites/world/chicken_coop.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "chicken_coop"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "image": "../sprites/world/produce_stall.png",
+      "imagewidth": 96,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "produce_stall"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "image": "../sprites/world/roofed_well.png",
+      "imagewidth": 64,
+      "imageheight": 96,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "roofed_well"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "image": "../sprites/world/scarecrow.png",
+      "imagewidth": 48,
+      "imageheight": 80,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "scarecrow"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "image": "../sprites/world/storage_chest.png",
+      "imagewidth": 48,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "storage_chest"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "image": "../sprites/world/wood_barrel.png",
+      "imagewidth": 32,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "wood_barrel"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "image": "../sprites/world/carrot_crate.png",
+      "imagewidth": 48,
+      "imageheight": 40,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "carrot_crate"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "image": "../sprites/world/beehive.png",
+      "imagewidth": 48,
+      "imageheight": 64,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "beehive"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "image": "../sprites/world/fence_horizontal.png",
+      "imagewidth": 64,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "fence_horizontal"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "image": "../sprites/world/fence_diagonal.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "fence_diagonal"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "image": "../sprites/world/gardener_front.png",
+      "imagewidth": 32,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "gardener_front"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "image": "../sprites/world/hen_right.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "hen_right"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "image": "../sprites/world/duck_right.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "duck_right"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "image": "../sprites/world/sheep_right.png",
+      "imagewidth": 48,
+      "imageheight": 40,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "sheep_right"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "image": "../sprites/world/watering_can.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "watering_can"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "image": "../sprites/world/potted_daisies.png",
+      "imagewidth": 32,
+      "imageheight": 48,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "potted_daisies"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "image": "../sprites/crops/carrot_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "carrot_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "image": "../sprites/crops/carrot_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "carrot_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "image": "../sprites/crops/carrot_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "carrot_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "image": "../sprites/crops/carrot_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "carrot_stage_04"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "image": "../sprites/crops/cabbage_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "cabbage_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "image": "../sprites/crops/cabbage_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "cabbage_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "image": "../sprites/crops/cabbage_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "cabbage_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "image": "../sprites/crops/cabbage_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "cabbage_stage_04"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "image": "../sprites/crops/tomato_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "tomato_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "image": "../sprites/crops/tomato_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "tomato_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "image": "../sprites/crops/tomato_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "tomato_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "image": "../sprites/crops/tomato_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "tomato_stage_04"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "image": "../sprites/crops/pumpkin_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "pumpkin_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "image": "../sprites/crops/pumpkin_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "pumpkin_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "image": "../sprites/crops/pumpkin_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "pumpkin_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "image": "../sprites/crops/pumpkin_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "pumpkin_stage_04"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "image": "../sprites/crops/strawberry_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "strawberry_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "image": "../sprites/crops/strawberry_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "strawberry_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "image": "../sprites/crops/strawberry_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "strawberry_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "image": "../sprites/crops/strawberry_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "strawberry_stage_04"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "image": "../sprites/crops/wheat_stage_01.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "wheat_stage_01"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "image": "../sprites/crops/wheat_stage_02.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "wheat_stage_02"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "image": "../sprites/crops/wheat_stage_03.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "wheat_stage_03"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "image": "../sprites/crops/wheat_stage_04.png",
+      "imagewidth": 32,
+      "imageheight": 32,
+      "properties": [
+        {
+          "name": "asset_name",
+          "type": "string",
+          "value": "wheat_stage_04"
+        }
+      ]
+    }
+  ]
+}

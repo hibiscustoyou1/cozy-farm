@@ -25,33 +25,44 @@ export class FarmScene extends Phaser.Scene {
     this.getState = data.getState;
   }
 
-  create(): void {
-    const state = this.getState();
+  preload(): void {
+    // 主环境图集为 7×7 的 16×16 像素图块；从 public 目录加载，供 M1 地图系统复用。
+    this.load.spritesheet('environment', '/assets/environment/ellen0ra/cozy-farm-tileset.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+  }
 
-    // M0 占位画面：随昼夜变化的底色 + 提示文字
-    // TODO(M0): 接入 16x16 瓦片地图与相机拖拽/捏合缩放
-    // TODO(M1): 地块渲染（荒地/耕地/生长阶段/成熟）、工具交互高亮
-    this.cameras.main.setBackgroundColor('#a8d5a2');
+  create(): void {
+    // M0 先用图集首帧铺设草地；M1 再由 Tilemap 接管具体地形和地块状态。
+    const grass = this.add
+      .tileSprite(0, 0, this.scale.width, this.scale.height, 'environment', 0)
+      .setOrigin(0);
 
     const hint = this.add
-      .text(0, 0, '四季田园 · 农场画布（M0 占位）', {
+      .text(0, 0, '四季田园 · 环境资源已接入', {
         fontFamily: 'monospace',
         fontSize: '16px',
         color: '#3d5a3d',
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setShadow(1, 1, '#f4efe0', 2, true, true);
 
-    // RESIZE 模式下跟随视口居中
-    this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+    const resize = (gameSize: Phaser.Structs.Size): void => {
+      grass.setSize(gameSize.width, gameSize.height);
       hint.setPosition(gameSize.width / 2, gameSize.height / 2);
-    });
-    hint.setPosition(this.scale.width / 2, this.scale.height / 2);
+    };
 
-    // 演示 gameTime 已接入：白天/黄昏切换底色（后续替换为真正的昼夜滤镜）
+    // RESIZE 模式下，背景和标语跟随可视区域；不把高频状态放进 Vue。
+    this.scale.on('resize', resize);
+    resize(this.scale.gameSize);
+
+    // 演示 gameTime 已接入：昼夜先以镜头色调表现，后续替换为真正的全场景滤镜。
     this.events.on('update', () => {
-      const s = this.getState();
-      const hour = (s.gameTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+      const state = this.getState();
+      const hour = (state.gameTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
       this.cameras.main.setBackgroundColor(hour >= 6 && hour < 18 ? '#a8d5a2' : '#2b3a4a');
+      grass.setAlpha(hour >= 6 && hour < 18 ? 1 : 0.7);
     });
   }
 }

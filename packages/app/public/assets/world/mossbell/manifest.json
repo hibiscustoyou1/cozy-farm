@@ -1,0 +1,1916 @@
+{
+  "name": "Mossbell Orchard",
+  "version": "1.0.0",
+  "terrain_tile_size": [
+    32,
+    32
+  ],
+  "world_sprite_count": 24,
+  "crop_species": [
+    "carrot",
+    "cabbage",
+    "tomato",
+    "pumpkin",
+    "strawberry",
+    "wheat"
+  ],
+  "crop_stage_count": 24,
+  "sprite_entry_count": 48,
+  "terrain_entry_count": 161,
+  "sprite_sizes": "mixed, explicitly listed per asset; not a uniform 16px pack",
+  "sprites": [
+    {
+      "name": "pear_tree",
+      "file": "sprites/world/pear_tree.png",
+      "category": "nature",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        0,
+        0,
+        275,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/pear_tree_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "blossom_tree",
+      "file": "sprites/world/blossom_tree.png",
+      "category": "nature",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        275,
+        0,
+        535,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/blossom_tree_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "conifer_tree",
+      "file": "sprites/world/conifer_tree.png",
+      "category": "nature",
+      "width": 64,
+      "height": 96,
+      "anchor_px": [
+        32,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        535,
+        0,
+        780,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/conifer_tree_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "daisy_bush",
+      "file": "sprites/world/daisy_bush.png",
+      "category": "nature",
+      "width": 64,
+      "height": 48,
+      "anchor_px": [
+        32,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        780,
+        0,
+        1030,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/daisy_bush_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "berry_bush",
+      "file": "sprites/world/berry_bush.png",
+      "category": "nature",
+      "width": 64,
+      "height": 48,
+      "anchor_px": [
+        32,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1030,
+        0,
+        1280,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/berry_bush_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "mushroom_cluster",
+      "file": "sprites/world/mushroom_cluster.png",
+      "category": "nature",
+      "width": 48,
+      "height": 40,
+      "anchor_px": [
+        24,
+        38
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1280,
+        0,
+        1536,
+        290
+      ],
+      "source_cutout": "source/transparent_cutouts/mushroom_cluster_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "farm_cottage",
+      "file": "sprites/world/farm_cottage.png",
+      "category": "building",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        0,
+        290,
+        280,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/farm_cottage_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "greenhouse",
+      "file": "sprites/world/greenhouse.png",
+      "category": "building",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        280,
+        290,
+        538,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/greenhouse_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "chicken_coop",
+      "file": "sprites/world/chicken_coop.png",
+      "category": "building",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        538,
+        290,
+        776,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/chicken_coop_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "produce_stall",
+      "file": "sprites/world/produce_stall.png",
+      "category": "building",
+      "width": 96,
+      "height": 96,
+      "anchor_px": [
+        48,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        776,
+        290,
+        1040,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/produce_stall_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "roofed_well",
+      "file": "sprites/world/roofed_well.png",
+      "category": "building",
+      "width": 64,
+      "height": 96,
+      "anchor_px": [
+        32,
+        94
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1040,
+        290,
+        1270,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/roofed_well_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "scarecrow",
+      "file": "sprites/world/scarecrow.png",
+      "category": "prop",
+      "width": 48,
+      "height": 80,
+      "anchor_px": [
+        24,
+        78
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1270,
+        290,
+        1536,
+        580
+      ],
+      "source_cutout": "source/transparent_cutouts/scarecrow_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "storage_chest",
+      "file": "sprites/world/storage_chest.png",
+      "category": "prop",
+      "width": 48,
+      "height": 32,
+      "anchor_px": [
+        24,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        0,
+        580,
+        285,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/storage_chest_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "wood_barrel",
+      "file": "sprites/world/wood_barrel.png",
+      "category": "prop",
+      "width": 32,
+      "height": 48,
+      "anchor_px": [
+        16,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        285,
+        580,
+        515,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/wood_barrel_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "carrot_crate",
+      "file": "sprites/world/carrot_crate.png",
+      "category": "prop",
+      "width": 48,
+      "height": 40,
+      "anchor_px": [
+        24,
+        38
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        515,
+        580,
+        772,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/carrot_crate_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "beehive",
+      "file": "sprites/world/beehive.png",
+      "category": "prop",
+      "width": 48,
+      "height": 64,
+      "anchor_px": [
+        24,
+        62
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        772,
+        580,
+        981,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/beehive_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "fence_horizontal",
+      "file": "sprites/world/fence_horizontal.png",
+      "category": "prop",
+      "width": 64,
+      "height": 32,
+      "anchor_px": [
+        32,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        981,
+        580,
+        1280,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/fence_horizontal_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "fence_diagonal",
+      "file": "sprites/world/fence_diagonal.png",
+      "category": "prop",
+      "width": 48,
+      "height": 48,
+      "anchor_px": [
+        24,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1280,
+        580,
+        1536,
+        770
+      ],
+      "source_cutout": "source/transparent_cutouts/fence_diagonal_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "gardener_front",
+      "file": "sprites/world/gardener_front.png",
+      "category": "character",
+      "width": 32,
+      "height": 48,
+      "anchor_px": [
+        16,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        0,
+        770,
+        270,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/gardener_front_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "hen_right",
+      "file": "sprites/world/hen_right.png",
+      "category": "animal",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        270,
+        770,
+        525,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/hen_right_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "duck_right",
+      "file": "sprites/world/duck_right.png",
+      "category": "animal",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        525,
+        770,
+        775,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/duck_right_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "sheep_right",
+      "file": "sprites/world/sheep_right.png",
+      "category": "animal",
+      "width": 48,
+      "height": 40,
+      "anchor_px": [
+        24,
+        38
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        775,
+        770,
+        1040,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/sheep_right_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "watering_can",
+      "file": "sprites/world/watering_can.png",
+      "category": "prop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1040,
+        770,
+        1280,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/watering_can_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "potted_daisies",
+      "file": "sprites/world/potted_daisies.png",
+      "category": "prop",
+      "width": 32,
+      "height": 48,
+      "anchor_px": [
+        16,
+        46
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "AI-generated artwork, locally extracted, alpha-cleaned and normalized",
+      "source_crop_px": [
+        1280,
+        770,
+        1536,
+        1024
+      ],
+      "source_cutout": "source/transparent_cutouts/potted_daisies_cutout.png",
+      "animation": "static only"
+    },
+    {
+      "name": "carrot_stage_01",
+      "file": "sprites/crops/carrot_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "carrot",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "carrot_stage_02",
+      "file": "sprites/crops/carrot_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "carrot",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "carrot_stage_03",
+      "file": "sprites/crops/carrot_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "carrot",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "carrot_stage_04",
+      "file": "sprites/crops/carrot_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "carrot",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "cabbage_stage_01",
+      "file": "sprites/crops/cabbage_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "cabbage",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "cabbage_stage_02",
+      "file": "sprites/crops/cabbage_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "cabbage",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "cabbage_stage_03",
+      "file": "sprites/crops/cabbage_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "cabbage",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "cabbage_stage_04",
+      "file": "sprites/crops/cabbage_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "cabbage",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "tomato_stage_01",
+      "file": "sprites/crops/tomato_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "tomato",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "tomato_stage_02",
+      "file": "sprites/crops/tomato_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "tomato",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "tomato_stage_03",
+      "file": "sprites/crops/tomato_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "tomato",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "tomato_stage_04",
+      "file": "sprites/crops/tomato_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "tomato",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "pumpkin_stage_01",
+      "file": "sprites/crops/pumpkin_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "pumpkin",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "pumpkin_stage_02",
+      "file": "sprites/crops/pumpkin_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "pumpkin",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "pumpkin_stage_03",
+      "file": "sprites/crops/pumpkin_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "pumpkin",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "pumpkin_stage_04",
+      "file": "sprites/crops/pumpkin_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "pumpkin",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "strawberry_stage_01",
+      "file": "sprites/crops/strawberry_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "strawberry",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "strawberry_stage_02",
+      "file": "sprites/crops/strawberry_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "strawberry",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "strawberry_stage_03",
+      "file": "sprites/crops/strawberry_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "strawberry",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "strawberry_stage_04",
+      "file": "sprites/crops/strawberry_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "strawberry",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "wheat_stage_01",
+      "file": "sprites/crops/wheat_stage_01.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "wheat",
+      "growth_stage": 1,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "wheat_stage_02",
+      "file": "sprites/crops/wheat_stage_02.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "wheat",
+      "growth_stage": 2,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "wheat_stage_03",
+      "file": "sprites/crops/wheat_stage_03.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "wheat",
+      "growth_stage": 3,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    },
+    {
+      "name": "wheat_stage_04",
+      "file": "sprites/crops/wheat_stage_04.png",
+      "category": "crop",
+      "width": 32,
+      "height": 32,
+      "anchor_px": [
+        16,
+        30
+      ],
+      "alpha": "binary (0 or 255)",
+      "origin": "Original raster pixel drawing built with AI-assisted code",
+      "crop": "wheat",
+      "growth_stage": 4,
+      "growth_stage_count": 4,
+      "animation": "four discrete growth states, not a smooth animation"
+    }
+  ],
+  "tiles": [
+    {
+      "id": 0,
+      "name": "grass_00",
+      "kind": "grass",
+      "variant": 0
+    },
+    {
+      "id": 1,
+      "name": "grass_01",
+      "kind": "grass",
+      "variant": 1
+    },
+    {
+      "id": 2,
+      "name": "grass_02",
+      "kind": "grass",
+      "variant": 2
+    },
+    {
+      "id": 3,
+      "name": "grass_03",
+      "kind": "grass",
+      "variant": 3
+    },
+    {
+      "id": 4,
+      "name": "path_00",
+      "kind": "path",
+      "variant": 0
+    },
+    {
+      "id": 5,
+      "name": "path_01",
+      "kind": "path",
+      "variant": 1
+    },
+    {
+      "id": 6,
+      "name": "path_02",
+      "kind": "path",
+      "variant": 2
+    },
+    {
+      "id": 7,
+      "name": "path_03",
+      "kind": "path",
+      "variant": 3
+    },
+    {
+      "id": 8,
+      "name": "soil_00",
+      "kind": "soil",
+      "variant": 0
+    },
+    {
+      "id": 9,
+      "name": "soil_01",
+      "kind": "soil",
+      "variant": 1
+    },
+    {
+      "id": 10,
+      "name": "soil_02",
+      "kind": "soil",
+      "variant": 2
+    },
+    {
+      "id": 11,
+      "name": "soil_03",
+      "kind": "soil",
+      "variant": 3
+    },
+    {
+      "id": 12,
+      "name": "stone_00",
+      "kind": "stone",
+      "variant": 0
+    },
+    {
+      "id": 13,
+      "name": "stone_01",
+      "kind": "stone",
+      "variant": 1
+    },
+    {
+      "id": 14,
+      "name": "stone_02",
+      "kind": "stone",
+      "variant": 2
+    },
+    {
+      "id": 15,
+      "name": "stone_03",
+      "kind": "stone",
+      "variant": 3
+    },
+    {
+      "id": 16,
+      "name": "water_00",
+      "kind": "water",
+      "variant": 0
+    },
+    {
+      "id": 17,
+      "name": "water_01",
+      "kind": "water",
+      "variant": 1
+    },
+    {
+      "id": 18,
+      "name": "water_02",
+      "kind": "water",
+      "variant": 2
+    },
+    {
+      "id": 19,
+      "name": "water_03",
+      "kind": "water",
+      "variant": 3
+    },
+    {
+      "id": 20,
+      "name": "shore_mask_000",
+      "kind": "shore",
+      "mask": 0
+    },
+    {
+      "id": 21,
+      "name": "shore_mask_001",
+      "kind": "shore",
+      "mask": 1
+    },
+    {
+      "id": 22,
+      "name": "shore_mask_002",
+      "kind": "shore",
+      "mask": 2
+    },
+    {
+      "id": 23,
+      "name": "shore_mask_003",
+      "kind": "shore",
+      "mask": 3
+    },
+    {
+      "id": 24,
+      "name": "shore_mask_004",
+      "kind": "shore",
+      "mask": 4
+    },
+    {
+      "id": 25,
+      "name": "shore_mask_005",
+      "kind": "shore",
+      "mask": 5
+    },
+    {
+      "id": 26,
+      "name": "shore_mask_006",
+      "kind": "shore",
+      "mask": 6
+    },
+    {
+      "id": 27,
+      "name": "shore_mask_007",
+      "kind": "shore",
+      "mask": 7
+    },
+    {
+      "id": 28,
+      "name": "shore_mask_008",
+      "kind": "shore",
+      "mask": 8
+    },
+    {
+      "id": 29,
+      "name": "shore_mask_009",
+      "kind": "shore",
+      "mask": 9
+    },
+    {
+      "id": 30,
+      "name": "shore_mask_010",
+      "kind": "shore",
+      "mask": 10
+    },
+    {
+      "id": 31,
+      "name": "shore_mask_011",
+      "kind": "shore",
+      "mask": 11
+    },
+    {
+      "id": 32,
+      "name": "shore_mask_012",
+      "kind": "shore",
+      "mask": 12
+    },
+    {
+      "id": 33,
+      "name": "shore_mask_013",
+      "kind": "shore",
+      "mask": 13
+    },
+    {
+      "id": 34,
+      "name": "shore_mask_014",
+      "kind": "shore",
+      "mask": 14
+    },
+    {
+      "id": 35,
+      "name": "shore_mask_015",
+      "kind": "shore",
+      "mask": 15
+    },
+    {
+      "id": 36,
+      "name": "shore_mask_019",
+      "kind": "shore",
+      "mask": 19
+    },
+    {
+      "id": 37,
+      "name": "shore_mask_023",
+      "kind": "shore",
+      "mask": 23
+    },
+    {
+      "id": 38,
+      "name": "shore_mask_027",
+      "kind": "shore",
+      "mask": 27
+    },
+    {
+      "id": 39,
+      "name": "shore_mask_031",
+      "kind": "shore",
+      "mask": 31
+    },
+    {
+      "id": 40,
+      "name": "shore_mask_038",
+      "kind": "shore",
+      "mask": 38
+    },
+    {
+      "id": 41,
+      "name": "shore_mask_039",
+      "kind": "shore",
+      "mask": 39
+    },
+    {
+      "id": 42,
+      "name": "shore_mask_046",
+      "kind": "shore",
+      "mask": 46
+    },
+    {
+      "id": 43,
+      "name": "shore_mask_047",
+      "kind": "shore",
+      "mask": 47
+    },
+    {
+      "id": 44,
+      "name": "shore_mask_055",
+      "kind": "shore",
+      "mask": 55
+    },
+    {
+      "id": 45,
+      "name": "shore_mask_063",
+      "kind": "shore",
+      "mask": 63
+    },
+    {
+      "id": 46,
+      "name": "shore_mask_076",
+      "kind": "shore",
+      "mask": 76
+    },
+    {
+      "id": 47,
+      "name": "shore_mask_077",
+      "kind": "shore",
+      "mask": 77
+    },
+    {
+      "id": 48,
+      "name": "shore_mask_078",
+      "kind": "shore",
+      "mask": 78
+    },
+    {
+      "id": 49,
+      "name": "shore_mask_079",
+      "kind": "shore",
+      "mask": 79
+    },
+    {
+      "id": 50,
+      "name": "shore_mask_095",
+      "kind": "shore",
+      "mask": 95
+    },
+    {
+      "id": 51,
+      "name": "shore_mask_110",
+      "kind": "shore",
+      "mask": 110
+    },
+    {
+      "id": 52,
+      "name": "shore_mask_111",
+      "kind": "shore",
+      "mask": 111
+    },
+    {
+      "id": 53,
+      "name": "shore_mask_127",
+      "kind": "shore",
+      "mask": 127
+    },
+    {
+      "id": 54,
+      "name": "shore_mask_137",
+      "kind": "shore",
+      "mask": 137
+    },
+    {
+      "id": 55,
+      "name": "shore_mask_139",
+      "kind": "shore",
+      "mask": 139
+    },
+    {
+      "id": 56,
+      "name": "shore_mask_141",
+      "kind": "shore",
+      "mask": 141
+    },
+    {
+      "id": 57,
+      "name": "shore_mask_143",
+      "kind": "shore",
+      "mask": 143
+    },
+    {
+      "id": 58,
+      "name": "shore_mask_155",
+      "kind": "shore",
+      "mask": 155
+    },
+    {
+      "id": 59,
+      "name": "shore_mask_159",
+      "kind": "shore",
+      "mask": 159
+    },
+    {
+      "id": 60,
+      "name": "shore_mask_175",
+      "kind": "shore",
+      "mask": 175
+    },
+    {
+      "id": 61,
+      "name": "shore_mask_191",
+      "kind": "shore",
+      "mask": 191
+    },
+    {
+      "id": 62,
+      "name": "shore_mask_205",
+      "kind": "shore",
+      "mask": 205
+    },
+    {
+      "id": 63,
+      "name": "shore_mask_207",
+      "kind": "shore",
+      "mask": 207
+    },
+    {
+      "id": 64,
+      "name": "shore_mask_223",
+      "kind": "shore",
+      "mask": 223
+    },
+    {
+      "id": 65,
+      "name": "shore_mask_239",
+      "kind": "shore",
+      "mask": 239
+    },
+    {
+      "id": 66,
+      "name": "shore_mask_255",
+      "kind": "shore",
+      "mask": 255
+    },
+    {
+      "id": 67,
+      "name": "path_mask_000",
+      "kind": "path_transition",
+      "mask": 0
+    },
+    {
+      "id": 68,
+      "name": "path_mask_001",
+      "kind": "path_transition",
+      "mask": 1
+    },
+    {
+      "id": 69,
+      "name": "path_mask_002",
+      "kind": "path_transition",
+      "mask": 2
+    },
+    {
+      "id": 70,
+      "name": "path_mask_003",
+      "kind": "path_transition",
+      "mask": 3
+    },
+    {
+      "id": 71,
+      "name": "path_mask_004",
+      "kind": "path_transition",
+      "mask": 4
+    },
+    {
+      "id": 72,
+      "name": "path_mask_005",
+      "kind": "path_transition",
+      "mask": 5
+    },
+    {
+      "id": 73,
+      "name": "path_mask_006",
+      "kind": "path_transition",
+      "mask": 6
+    },
+    {
+      "id": 74,
+      "name": "path_mask_007",
+      "kind": "path_transition",
+      "mask": 7
+    },
+    {
+      "id": 75,
+      "name": "path_mask_008",
+      "kind": "path_transition",
+      "mask": 8
+    },
+    {
+      "id": 76,
+      "name": "path_mask_009",
+      "kind": "path_transition",
+      "mask": 9
+    },
+    {
+      "id": 77,
+      "name": "path_mask_010",
+      "kind": "path_transition",
+      "mask": 10
+    },
+    {
+      "id": 78,
+      "name": "path_mask_011",
+      "kind": "path_transition",
+      "mask": 11
+    },
+    {
+      "id": 79,
+      "name": "path_mask_012",
+      "kind": "path_transition",
+      "mask": 12
+    },
+    {
+      "id": 80,
+      "name": "path_mask_013",
+      "kind": "path_transition",
+      "mask": 13
+    },
+    {
+      "id": 81,
+      "name": "path_mask_014",
+      "kind": "path_transition",
+      "mask": 14
+    },
+    {
+      "id": 82,
+      "name": "path_mask_015",
+      "kind": "path_transition",
+      "mask": 15
+    },
+    {
+      "id": 83,
+      "name": "path_mask_019",
+      "kind": "path_transition",
+      "mask": 19
+    },
+    {
+      "id": 84,
+      "name": "path_mask_023",
+      "kind": "path_transition",
+      "mask": 23
+    },
+    {
+      "id": 85,
+      "name": "path_mask_027",
+      "kind": "path_transition",
+      "mask": 27
+    },
+    {
+      "id": 86,
+      "name": "path_mask_031",
+      "kind": "path_transition",
+      "mask": 31
+    },
+    {
+      "id": 87,
+      "name": "path_mask_038",
+      "kind": "path_transition",
+      "mask": 38
+    },
+    {
+      "id": 88,
+      "name": "path_mask_039",
+      "kind": "path_transition",
+      "mask": 39
+    },
+    {
+      "id": 89,
+      "name": "path_mask_046",
+      "kind": "path_transition",
+      "mask": 46
+    },
+    {
+      "id": 90,
+      "name": "path_mask_047",
+      "kind": "path_transition",
+      "mask": 47
+    },
+    {
+      "id": 91,
+      "name": "path_mask_055",
+      "kind": "path_transition",
+      "mask": 55
+    },
+    {
+      "id": 92,
+      "name": "path_mask_063",
+      "kind": "path_transition",
+      "mask": 63
+    },
+    {
+      "id": 93,
+      "name": "path_mask_076",
+      "kind": "path_transition",
+      "mask": 76
+    },
+    {
+      "id": 94,
+      "name": "path_mask_077",
+      "kind": "path_transition",
+      "mask": 77
+    },
+    {
+      "id": 95,
+      "name": "path_mask_078",
+      "kind": "path_transition",
+      "mask": 78
+    },
+    {
+      "id": 96,
+      "name": "path_mask_079",
+      "kind": "path_transition",
+      "mask": 79
+    },
+    {
+      "id": 97,
+      "name": "path_mask_095",
+      "kind": "path_transition",
+      "mask": 95
+    },
+    {
+      "id": 98,
+      "name": "path_mask_110",
+      "kind": "path_transition",
+      "mask": 110
+    },
+    {
+      "id": 99,
+      "name": "path_mask_111",
+      "kind": "path_transition",
+      "mask": 111
+    },
+    {
+      "id": 100,
+      "name": "path_mask_127",
+      "kind": "path_transition",
+      "mask": 127
+    },
+    {
+      "id": 101,
+      "name": "path_mask_137",
+      "kind": "path_transition",
+      "mask": 137
+    },
+    {
+      "id": 102,
+      "name": "path_mask_139",
+      "kind": "path_transition",
+      "mask": 139
+    },
+    {
+      "id": 103,
+      "name": "path_mask_141",
+      "kind": "path_transition",
+      "mask": 141
+    },
+    {
+      "id": 104,
+      "name": "path_mask_143",
+      "kind": "path_transition",
+      "mask": 143
+    },
+    {
+      "id": 105,
+      "name": "path_mask_155",
+      "kind": "path_transition",
+      "mask": 155
+    },
+    {
+      "id": 106,
+      "name": "path_mask_159",
+      "kind": "path_transition",
+      "mask": 159
+    },
+    {
+      "id": 107,
+      "name": "path_mask_175",
+      "kind": "path_transition",
+      "mask": 175
+    },
+    {
+      "id": 108,
+      "name": "path_mask_191",
+      "kind": "path_transition",
+      "mask": 191
+    },
+    {
+      "id": 109,
+      "name": "path_mask_205",
+      "kind": "path_transition",
+      "mask": 205
+    },
+    {
+      "id": 110,
+      "name": "path_mask_207",
+      "kind": "path_transition",
+      "mask": 207
+    },
+    {
+      "id": 111,
+      "name": "path_mask_223",
+      "kind": "path_transition",
+      "mask": 223
+    },
+    {
+      "id": 112,
+      "name": "path_mask_239",
+      "kind": "path_transition",
+      "mask": 239
+    },
+    {
+      "id": 113,
+      "name": "path_mask_255",
+      "kind": "path_transition",
+      "mask": 255
+    },
+    {
+      "id": 114,
+      "name": "soil_mask_000",
+      "kind": "soil_transition",
+      "mask": 0
+    },
+    {
+      "id": 115,
+      "name": "soil_mask_001",
+      "kind": "soil_transition",
+      "mask": 1
+    },
+    {
+      "id": 116,
+      "name": "soil_mask_002",
+      "kind": "soil_transition",
+      "mask": 2
+    },
+    {
+      "id": 117,
+      "name": "soil_mask_003",
+      "kind": "soil_transition",
+      "mask": 3
+    },
+    {
+      "id": 118,
+      "name": "soil_mask_004",
+      "kind": "soil_transition",
+      "mask": 4
+    },
+    {
+      "id": 119,
+      "name": "soil_mask_005",
+      "kind": "soil_transition",
+      "mask": 5
+    },
+    {
+      "id": 120,
+      "name": "soil_mask_006",
+      "kind": "soil_transition",
+      "mask": 6
+    },
+    {
+      "id": 121,
+      "name": "soil_mask_007",
+      "kind": "soil_transition",
+      "mask": 7
+    },
+    {
+      "id": 122,
+      "name": "soil_mask_008",
+      "kind": "soil_transition",
+      "mask": 8
+    },
+    {
+      "id": 123,
+      "name": "soil_mask_009",
+      "kind": "soil_transition",
+      "mask": 9
+    },
+    {
+      "id": 124,
+      "name": "soil_mask_010",
+      "kind": "soil_transition",
+      "mask": 10
+    },
+    {
+      "id": 125,
+      "name": "soil_mask_011",
+      "kind": "soil_transition",
+      "mask": 11
+    },
+    {
+      "id": 126,
+      "name": "soil_mask_012",
+      "kind": "soil_transition",
+      "mask": 12
+    },
+    {
+      "id": 127,
+      "name": "soil_mask_013",
+      "kind": "soil_transition",
+      "mask": 13
+    },
+    {
+      "id": 128,
+      "name": "soil_mask_014",
+      "kind": "soil_transition",
+      "mask": 14
+    },
+    {
+      "id": 129,
+      "name": "soil_mask_015",
+      "kind": "soil_transition",
+      "mask": 15
+    },
+    {
+      "id": 130,
+      "name": "soil_mask_019",
+      "kind": "soil_transition",
+      "mask": 19
+    },
+    {
+      "id": 131,
+      "name": "soil_mask_023",
+      "kind": "soil_transition",
+      "mask": 23
+    },
+    {
+      "id": 132,
+      "name": "soil_mask_027",
+      "kind": "soil_transition",
+      "mask": 27
+    },
+    {
+      "id": 133,
+      "name": "soil_mask_031",
+      "kind": "soil_transition",
+      "mask": 31
+    },
+    {
+      "id": 134,
+      "name": "soil_mask_038",
+      "kind": "soil_transition",
+      "mask": 38
+    },
+    {
+      "id": 135,
+      "name": "soil_mask_039",
+      "kind": "soil_transition",
+      "mask": 39
+    },
+    {
+      "id": 136,
+      "name": "soil_mask_046",
+      "kind": "soil_transition",
+      "mask": 46
+    },
+    {
+      "id": 137,
+      "name": "soil_mask_047",
+      "kind": "soil_transition",
+      "mask": 47
+    },
+    {
+      "id": 138,
+      "name": "soil_mask_055",
+      "kind": "soil_transition",
+      "mask": 55
+    },
+    {
+      "id": 139,
+      "name": "soil_mask_063",
+      "kind": "soil_transition",
+      "mask": 63
+    },
+    {
+      "id": 140,
+      "name": "soil_mask_076",
+      "kind": "soil_transition",
+      "mask": 76
+    },
+    {
+      "id": 141,
+      "name": "soil_mask_077",
+      "kind": "soil_transition",
+      "mask": 77
+    },
+    {
+      "id": 142,
+      "name": "soil_mask_078",
+      "kind": "soil_transition",
+      "mask": 78
+    },
+    {
+      "id": 143,
+      "name": "soil_mask_079",
+      "kind": "soil_transition",
+      "mask": 79
+    },
+    {
+      "id": 144,
+      "name": "soil_mask_095",
+      "kind": "soil_transition",
+      "mask": 95
+    },
+    {
+      "id": 145,
+      "name": "soil_mask_110",
+      "kind": "soil_transition",
+      "mask": 110
+    },
+    {
+      "id": 146,
+      "name": "soil_mask_111",
+      "kind": "soil_transition",
+      "mask": 111
+    },
+    {
+      "id": 147,
+      "name": "soil_mask_127",
+      "kind": "soil_transition",
+      "mask": 127
+    },
+    {
+      "id": 148,
+      "name": "soil_mask_137",
+      "kind": "soil_transition",
+      "mask": 137
+    },
+    {
+      "id": 149,
+      "name": "soil_mask_139",
+      "kind": "soil_transition",
+      "mask": 139
+    },
+    {
+      "id": 150,
+      "name": "soil_mask_141",
+      "kind": "soil_transition",
+      "mask": 141
+    },
+    {
+      "id": 151,
+      "name": "soil_mask_143",
+      "kind": "soil_transition",
+      "mask": 143
+    },
+    {
+      "id": 152,
+      "name": "soil_mask_155",
+      "kind": "soil_transition",
+      "mask": 155
+    },
+    {
+      "id": 153,
+      "name": "soil_mask_159",
+      "kind": "soil_transition",
+      "mask": 159
+    },
+    {
+      "id": 154,
+      "name": "soil_mask_175",
+      "kind": "soil_transition",
+      "mask": 175
+    },
+    {
+      "id": 155,
+      "name": "soil_mask_191",
+      "kind": "soil_transition",
+      "mask": 191
+    },
+    {
+      "id": 156,
+      "name": "soil_mask_205",
+      "kind": "soil_transition",
+      "mask": 205
+    },
+    {
+      "id": 157,
+      "name": "soil_mask_207",
+      "kind": "soil_transition",
+      "mask": 207
+    },
+    {
+      "id": 158,
+      "name": "soil_mask_223",
+      "kind": "soil_transition",
+      "mask": 223
+    },
+    {
+      "id": 159,
+      "name": "soil_mask_239",
+      "kind": "soil_transition",
+      "mask": 239
+    },
+    {
+      "id": 160,
+      "name": "soil_mask_255",
+      "kind": "soil_transition",
+      "mask": 255
+    }
+  ],
+  "water_animation": {
+    "file": "atlases/water_4frames_32px.png",
+    "frame_width": 32,
+    "frame_height": 32,
+    "frame_count": 4,
+    "frame_ms": 240
+  },
+  "notes": [
+    "World sprites are static; no walking, direction sets or skeletal rigs are included.",
+    "Crop stages are discrete growth states, not smooth animation frames.",
+    "Terrain and crop artwork uses original deterministic pixel drawing; world artwork uses generative AI.",
+    "Counts are logical entries, not counts of visually unique drawings; some solid transition centres duplicate base textures."
+  ]
+}

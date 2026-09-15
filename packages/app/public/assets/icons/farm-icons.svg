@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 16" shape-rendering="crispEdges">
+  <g id="shop" transform="translate(0 0)">
+    <path fill="#7d5134" d="M1 6h14v9H1z"/><path fill="#f4c2a1" d="M0 4h16v3H0z"/><path fill="#c97b3d" d="M1 2h14v3H1z"/><path fill="#fffdf5" d="M3 7h4v4H3zm6 0h4v4H9z"/><path fill="#3d5a3d" d="M7 11h3v4H7z"/>
+  </g>
+  <g id="bag" transform="translate(16 0)">
+    <path fill="#7d5134" d="M2 5h12v10H2z"/><path fill="#c97b3d" d="M3 6h10v8H3z"/><path fill="#f4efe0" d="M5 5V3h6v2H9V4H7v1z"/><path fill="#fffdf5" d="M7 9h2v2H7z"/>
+  </g>
+  <g id="codex" transform="translate(32 0)">
+    <path fill="#7d5134" d="M2 1h10v14H2z"/><path fill="#fffdf5" d="M4 2h7v12H4z"/><path fill="#7fb069" d="M5 5h5v2H5zm0 4h5v2H5z"/><path fill="#c97b3d" d="M1 2h2v12H1z"/>
+  </g>
+  <g id="save" transform="translate(48 0)">
+    <path fill="#3d5a3d" d="M1 1h11l3 3v11H1z"/><path fill="#7fb069" d="M3 2h7v4H3z"/><path fill="#fffdf5" d="M4 9h8v5H4z"/><path fill="#7d5134" d="M5 10h6v2H5z"/><path fill="#3d5a3d" d="M8 2h1v3H8z"/>
+  </g>
+  <g id="coin" transform="translate(64 0)">
+    <path fill="#c97b3d" d="M4 1h8v2h2v2h1v6h-1v2h-2v2H4v-2H2v-2H1V5h1V3h2z"/><path fill="#e8b04b" d="M5 2h6v2h2v2h1v4h-1v2h-2v2H5v-2H3V8H2V6h1V4h2z"/><path fill="#fff3ab" d="M7 4h3v2H8v2H7V6h1V5H7z"/>
+  </g>
+  <g id="sound" transform="translate(80 0)">
+    <path fill="#3d5a3d" d="M1 6h3l5-4v12L4 10H1z"/><path fill="#7fb069" d="M10 5h2v2h-2zm0 4h2v2h-2zm2-2h2v2h-2z"/>
+  </g>
+</svg>

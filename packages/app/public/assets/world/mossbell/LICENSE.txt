@@ -1,0 +1,15 @@
+MOSSBELL ORCHARD — ASSET LICENSE v1.0
+
+Publisher means the original account that lawfully publishes this pack as its own release. Licensee means a person or organization that obtains this pack directly from that Publisher or an authorized distribution channel.
+
+Subject to the rights the Publisher is legally able to grant, the Publisher grants the Licensee a non-exclusive, worldwide permission to use, modify and incorporate the included assets and supporting code in personal and commercial games, applications, videos, educational projects and other finished creative works. Attribution is appreciated but not required. A suggested credit is: “Mossbell Orchard asset pack.”
+
+The Licensee may distribute the assets as an incorporated part of a finished work. Necessary project copies may be shared privately with contractors or collaborators working on that work, provided they do not use or redistribute the assets separately without their own permission.
+
+The Licensee may not resell, sublicense, give away or otherwise redistribute the asset files as a standalone asset pack, asset library, stock-art collection or source-art download, whether unchanged or modified. Do not use the included local viewer to publicly expose all the source assets as a replacement for the pack. Do not falsely claim that the source artwork was hand-drawn without AI assistance.
+
+The pack contains AI-generated/AI-assisted material. This license does not represent a guarantee of exclusivity, registrable copyright, trademark clearance, non-infringement or eligibility for any particular marketplace. The Publisher can grant only rights it actually holds. Rights granted by applicable law independently of this license are not removed by it.
+
+To the extent permitted by applicable law, the pack is provided “as is,” without warranties of merchantability, fitness for a particular purpose or uninterrupted availability. Nothing in this license excludes rights or liabilities that applicable law does not allow to be excluded.
+
+PUBLISHER ADOPTION NOTE: This is a proposed license for the account publishing the original release. Review and adopt or replace it before publication. Merely receiving this draft does not establish ownership of rights or authorize redistributing third-party material.
